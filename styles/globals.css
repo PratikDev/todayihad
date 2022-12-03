@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -15,12 +16,46 @@ a {
   box-sizing: border-box;
 }
 
+
+
+/* custom bootstrap classes */
+
+/* display flex and team */
+.d-flex{
+  display: flex;
+}
+.justify-content-center{
+  justify-content: center;
+}
+.align-items-center{
+  align-items: center;
+}
+
+
+/* height width */
+.h-100{
+  height: 100%;
+}
+.w-100{
+  width: 100%;
+}
+.vh-100{
+  height: 100vh;
+}
+
+/* postion */
+.position-relative{
+  position: relative;
+}
+
+
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
   body {
     color: white;
-    background: black;
+    background: #1D1F21;
   }
 }
