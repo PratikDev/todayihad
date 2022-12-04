@@ -69,8 +69,8 @@
   height: calc(var(--spacing-px) * 2);
 }
 
-.interactions > button{
-  background-color: #00adff;
+.interactions > a{
+  background-color: var(--brand-color);
   border: none;
   padding: 5px 0;
   border-radius: 5px;
