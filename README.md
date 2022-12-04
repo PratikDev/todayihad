@@ -1,2 +1,3 @@
 # todayihad (under construction)
-An app where you'll share what you had today
+
+An application where you'll share what you had today
