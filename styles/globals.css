@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
+:root{
+  --spacing-px: 15px;
+  --spacing-vw: 1vw;
+  --brand-color: #00adff;
+}
+
 html,
 body {
   padding: 0;
@@ -24,6 +30,9 @@ a {
 .d-flex{
   display: flex;
 }
+.flex-column{
+  flex-direction: column;
+}
 .justify-content-center{
   justify-content: center;
 }
@@ -36,11 +45,17 @@ a {
 .h-100{
   height: 100%;
 }
-.w-100{
-  width: 100%;
-}
 .vh-100{
   height: 100vh;
+}
+.w-100{
+  width: 100% !important;
+}
+.w-50{
+  width: 50%;
+}
+.vw-100{
+  width: 100vw;
 }
 
 /* postion */
@@ -56,6 +71,12 @@ a {
   }
   body {
     color: white;
-    background: #1D1F21;
+    background-color: #1D1F21;
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  :root{
+    --spacing-px: var(--spacing-vw)
   }
 }
