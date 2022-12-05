@@ -1,0 +1,27 @@
+.user_info_sec{
+    flex-grow: 1;
+    height: fit-content;
+    max-width: 400px;
+}
+
+.user_dp_sec{
+    width: fit-content;
+}
+
+.edit_dp_btn{
+    width: 30px;
+    height: 30px;
+    background-color: #CCCCCC;
+}
+
+.ltr_space_2{
+    letter-spacing: 2px;
+}
+
+.user_info_text_length{
+    font-size: 12px;
+    width: inherit;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -45,10 +45,13 @@ a {
   background-color: var(--brand-color);
 }
 
-.brand-bg:hover{
+.brand-bg:not(.no-hover):hover{
   background-color: rgba(var(--r), var(--g), var(--b), 0.9);
 }
 
+.brand-border{
+  border-color: var(--brand-color) !important;
+}
 
 .brand-text, .brand-text:hover{
   color: var(--brand-color);
