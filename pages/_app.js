@@ -1,10 +1,12 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/globals.css";
+import { Container } from "react-bootstrap";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 vw-100">
+    <Container className="vh-100">
       <Component {...pageProps} />
-    </div>
+    </Container>
   );
 }
 

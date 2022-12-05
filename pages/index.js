@@ -5,11 +5,11 @@ import Link from "next/link";
 // reactjs imports
 import { useRef } from "react";
 
-// styles imports
-import styles from "./../styles/Home.module.css";
-
 // use-gesture imports
 import { useDrag } from "@use-gesture/react";
+
+// styles import
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
   const containerRef = useRef();
@@ -17,7 +17,7 @@ export default function Home() {
   function scrollIt(side) {
     const { current } = containerRef;
     if (current) {
-      current.scrollLeft += side * (current.clientWidth + 15);
+      current.scrollLeft += side * (current.clientWidth + 8);
     }
   }
 
@@ -31,31 +31,33 @@ export default function Home() {
 
   return (
     <div
-      className={`${styles.wrapper} h-100 d-flex justify-content-center align-items-center flex-column`}
+      className={`h-100 d-flex justify-content-center align-items-center flex-column gap-3 py-3 mx-auto overflow-hidden ${styles.content}`}
     >
       <div
-        className={`${styles.container} w-100 h-100 d-flex align-items-center position-relative`}
+        className={`h-100 d-flex align-items-center gap-2 w-100 overflow-hidden ${styles.wrapper}`}
         ref={containerRef}
       >
         {[1, 2, 3, 4].map((e, index) => (
           <div
             key={index}
-            className={`${styles.img_container} position-relative h-100 w-100`}
+            className={`position-relative h-100 w-100 flex-grow-0 flex-shrink-0 rounded-1 overflow-hidden ${styles.post}`}
           >
             <Image
               src={e % 2 !== 0 ? "/preview_img.png" : "/preview_img2.png"}
               fill
-              className={styles.user_img}
               alt="Today this person had..."
               draggable={false}
               {...scrollable_img()}
+              className={`objectFit-contain bg-secondary bg-opacity-50 ${styles.post_img}`}
             />
-            <div className={`${styles.description} w-100`}>
+            <div
+              className={`w-100 position-absolute bottom-0 px-sm-4 px-3 pb-2 pt-5 ${styles.post_caption}`}
+            >
               <span>
                 Today{" "}
                 <a
                   href="https://www.google.com"
-                  className={`${styles.user_profile_link}`}
+                  className={`brand-text fs-5 fw-bold ${styles.op_profile}`}
                 >
                   User9898
                 </a>{" "}
@@ -71,17 +73,19 @@ export default function Home() {
           </div>
         ))}
       </div>
-      <div className={`${styles.interactions} d-flex align-items-center w-100`}>
+      <div className={`d-flex align-items-center px-2 w-100 gap-3`}>
         <Link
           href="/user"
-          className={`w-50 d-flex align-items-center justify-content-center`}
+          className={`w-50 d-flex align-items-center justify-content-center py-2 rounded-1 brand-bg`}
           title="Visit your profile"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            className={`bi bi-person-circle ${styles.icon} w-100`}
+            fill="white"
+            className={`bi bi-person-circle ${styles.icons}`}
             viewBox="0 0 16 16"
+            width={30}
+            height={30}
           >
             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
             <path
@@ -92,14 +96,16 @@ export default function Home() {
         </Link>
         <Link
           href="/new-post"
-          className={`w-50 d-flex align-items-center justify-content-center`}
+          className={`w-50 d-flex align-items-center justify-content-center py-2 rounded-1 brand-bg`}
           title="Post what you had today"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            className={`bi bi-plus-square ${styles.icon} w-100`}
+            fill="white"
+            className={`bi bi-plus-square ${styles.icons}`}
             viewBox="0 0 16 16"
+            width={30}
+            height={30}
           >
             <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
