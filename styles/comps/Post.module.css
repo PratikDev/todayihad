@@ -13,6 +13,10 @@
   letter-spacing: 1.3px;
 }
 
+.post_caption::selection {
+  background-color: gray;
+}
+
 .post_caption:has(+ .expand_btn:not(:checked)) {
   max-height: calc(var(--max-lines) * var(--font-size) * var(--line-height));
 }
@@ -25,4 +29,8 @@
   bottom: 0;
   height: calc(var(--shadow-count) * var(--font-size) * var(--line-height));
   background: linear-gradient(to bottom, transparent, #27363e);
+}
+
+.react_btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
