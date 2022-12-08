@@ -13,3 +13,7 @@
 .content {
   max-width: 1000px;
 }
+
+.menu_btn {
+  border-top-left-radius: 40px !important;
+}
