@@ -70,3 +70,7 @@ a:hover {
 .box-sizing-content {
   box-sizing: content-box;
 }
+
+.cursor {
+  cursor: pointer;
+}

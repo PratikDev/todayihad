@@ -1,3 +1,28 @@
 .post_media {
   max-height: 500px;
 }
+
+.post_caption {
+  --max-lines: 5;
+  --font-size: 14px;
+  --line-height: 1.5;
+
+  overflow: hidden;
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+  letter-spacing: 1.3px;
+}
+
+.post_caption:has(+ .expand_btn:not(:checked)) {
+  max-height: calc(var(--max-lines) * var(--font-size) * var(--line-height));
+}
+
+.post_caption:has(+ .expand_btn:not(:checked))::before {
+  --shadow-count: 4;
+  content: "";
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: calc(var(--shadow-count) * var(--font-size) * var(--line-height));
+  background: linear-gradient(to bottom, transparent, #27363e);
+}
