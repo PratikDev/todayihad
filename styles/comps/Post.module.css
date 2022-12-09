@@ -38,3 +38,37 @@
 .post_creation_date {
   font-size: 11px;
 }
+
+@media screen and (max-width: 480px) {
+  .post_caption {
+    --font-size: 11px;
+  }
+
+  .react_btn {
+    font-size: 14px;
+  }
+
+  .react_btn > svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .post_media {
+    max-height: 400px;
+  }
+}
+
+@media screen and (max-width: 410px) {
+  .react_btn {
+    padding: 0.25rem !important;
+  }
+
+  .react_btn_container {
+    padding: 0.25rem 0.5rem !important;
+  }
+
+  .post_settings {
+    width: 5px;
+    height: 20px;
+  }
+}

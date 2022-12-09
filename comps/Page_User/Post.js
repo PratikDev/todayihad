@@ -22,6 +22,8 @@ function Post({ count }) {
     }
   }, [caption_expand]);
 
+  const prior = count === 1 ? true : false;
+
   return (
     <div className={`bg-secondary bg-opacity-25 rounded-1 p-4`}>
       <div className="d-flex flex-column align-items-center justify-content-between gap-4 p-1">
@@ -31,6 +33,7 @@ function Post({ count }) {
               src="/preview_img.png"
               width={40}
               height={40}
+              priority={prior}
               alt="op dp"
               className={`rounded-circle objectFit-contain bg-secondary`}
             />
@@ -47,7 +50,7 @@ function Post({ count }) {
             fill="rgba(255,255,255,0.75)"
             width={10}
             height={25}
-            className={`p-2 px-3 box-sizing-content`}
+            className={`p-2 px-3 box-sizing-content ${styles.post_settings}`}
             role="button"
           >
             <path d="M64 360c30.9 0 56 25.1 56 56s-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56zm0-160c30.9 0 56 25.1 56 56s-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56zM120 96c0 30.9-25.1 56-56 56S8 126.9 8 96S33.1 40 64 40s56 25.1 56 56z" />
@@ -120,18 +123,24 @@ function Post({ count }) {
             checked={caption_expand}
           />
           <div
-            className={`w-100 d-flex align-items-center justify-content-center`}
+            className={`w-100 d-flex align-items-center justify-content-center position-relative`}
           >
             <Image
               alt="post media"
               src={`/preview_img${count === 1 ? "" : count}.png`}
               fill
+              priority={prior}
+              sizes="(max-width: 768px) 100vw,
+              (max-width: 1200px) 50vw,
+              33vw"
               className={`objectFit-contain position-relative ${styles.post_media}`}
             />
           </div>
         </div>
 
-        <div className="d-flex align-items-center justify-content-between p-2 w-100 bg-secondary bg-opacity-25 rounded-1">
+        <div
+          className={`d-flex align-items-center justify-content-between p-2 w-100 bg-secondary bg-opacity-25 rounded-1 ${styles.react_btn_container}`}
+        >
           <button
             className={`btn text-light text-opacity-50 w-25 ${styles.react_btn}`}
           >

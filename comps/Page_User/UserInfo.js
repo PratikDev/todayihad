@@ -28,6 +28,7 @@ function UserInfo({ offcanvas }) {
             alt="user9898"
             width={150}
             height={150}
+            priority={!offcanvas ? true : false}
             className={`rounded-circle border border-2 border-white bg-secondary bg-opacity-50 objectFit-contain`}
           />
           <button
