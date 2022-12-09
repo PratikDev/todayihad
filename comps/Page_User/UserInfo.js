@@ -7,16 +7,18 @@ import { useRef } from "react";
 // styles imports
 import styles from "../../styles/comps/UserInfo.module.css";
 
-function UserInfo() {
+function UserInfo({ offcanvas }) {
   const img_upload = useRef();
 
   return (
     <div
-      className="position-sticky top-0 d-lg-block d-none"
+      className={`${
+        !offcanvas ? `position-sticky top-0 d-lg-block d-none` : ``
+      }`}
       style={{ height: `fit-content` }}
     >
       <div
-        className={`${styles.user_info_sec} rounded-1 bg-secondary bg-opacity-25 p-4 d-flex align-items-center justify-content-center flex-column gap-5 position-relative`}
+        className={`${styles.user_info_sec} rounded-1 p-4 d-flex align-items-center justify-content-center flex-column gap-5 position-relative`}
       >
         <div
           className={`position-relative d-flex align-items-center justify-content-center mx-auto ${styles.user_dp_sec}`}

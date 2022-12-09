@@ -26,7 +26,7 @@ function Post({ count }) {
     <div className={`bg-secondary bg-opacity-25 rounded-1 p-4`}>
       <div className="d-flex flex-column align-items-center justify-content-between gap-4 p-1">
         <div className="d-flex align-items-center justify-content-between w-100">
-          <Link href="/user" className={`d-flex align-items-end gap-1`}>
+          <Link href="/user" className={`d-flex align-items-center gap-2`}>
             <Image
               src="/preview_img.png"
               width={40}
@@ -34,7 +34,12 @@ function Post({ count }) {
               alt="op dp"
               className={`rounded-circle objectFit-contain bg-secondary`}
             />
-            <small>user9898</small>
+            <div className="d-flex flex-column">
+              <small>user9898</small>
+              <small className={`text-muted ${styles.post_creation_date}`}>
+                19 Aug, 1966
+              </small>
+            </div>
           </Link>
           <svg
             xmlns="http://www.w3.org/2000/svg"
