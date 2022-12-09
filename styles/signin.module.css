@@ -1,0 +1,63 @@
+.left {
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(255, 255, 255, 0.21) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  aspect-ratio: 1;
+}
+
+.desc {
+  font-size: 2.7rem;
+  letter-spacing: 8px;
+  line-height: 1.3;
+}
+
+.sign_in_btn {
+  letter-spacing: 4px;
+}
+
+.sign_in_btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.img_container {
+  aspect-ratio: 1.4571;
+}
+
+@media screen and (max-width: 1200px) {
+  .desc {
+    font-size: 2.4vw;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .wrapper {
+    flex-direction: column;
+  }
+
+  .wrapper > div:nth-child(2) {
+    width: 100% !important;
+  }
+
+  .wrapper > div:nth-child(1) {
+    width: 75% !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .desc {
+    width: 75% !important;
+    font-size: 1rem;
+  }
+
+  .sign_in_btn > p {
+    font-size: 11px !important;
+  }
+
+  .sign_in_btn > svg {
+    width: 30px;
+    height: 30px;
+  }
+}
