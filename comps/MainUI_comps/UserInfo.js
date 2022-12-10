@@ -13,12 +13,14 @@ function UserInfo({ offcanvas }) {
   return (
     <div
       className={`${
-        !offcanvas ? `position-sticky top-0 d-lg-block d-none` : ``
+        !offcanvas ? `position-sticky top-0 d-lg-block d-none` : `w-100`
       }`}
       style={{ height: `fit-content` }}
     >
       <div
-        className={`${styles.user_info_sec} rounded-1 p-4 d-flex align-items-center justify-content-center flex-column gap-5 position-relative`}
+        className={`${
+          offcanvas ? "" : styles.user_info_sec
+        } rounded-1 p-4 d-flex align-items-center justify-content-center flex-column gap-5 position-relative`}
       >
         <div
           className={`position-relative d-flex align-items-center justify-content-center mx-auto ${styles.user_dp_sec}`}

@@ -75,14 +75,6 @@ a:hover {
   cursor: pointer;
 }
 
-.offcanvas {
-  backdrop-filter: blur(11px);
-}
-
-.offcanvas > div {
-  border: 1px solid gray;
-}
-
 .light {
   font-weight: lighter;
 }
