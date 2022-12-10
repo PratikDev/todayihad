@@ -1,13 +1,5 @@
-/*Hide scrollbar for Chrome, Safari and Opera*/
-.post_list::-webkit-scrollbar {
-  display: none;
-}
-
-/*Hide scrollbar for IE, Edge add Firefox*/
 .post_list {
   flex-grow: 5;
-  -ms-overflow-style: none;
-  scrollbar-width: none; /* Firefox */
 }
 
 .content {
