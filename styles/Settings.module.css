@@ -1,0 +1,41 @@
+.checkbox {
+  zoom: 1.7;
+}
+
+.button {
+  width: fit-content;
+}
+
+@media screen and (max-width: 576px) {
+  .wrapper {
+    width: 100% !important;
+  }
+  .title {
+    font-size: 0.9rem;
+  }
+  .desc,
+  .select {
+    font-size: 0.8rem;
+  }
+  .option {
+    font-size: 0.6rem;
+  }
+  .checkbox {
+    zoom: 1.3;
+  }
+  .button {
+    font-size: 0.8rem;
+  }
+  .title_danger {
+    font-size: 1.3rem;
+  }
+  .small {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-height: 600px) {
+  .wrapper {
+    gap: 1rem !important;
+  }
+}

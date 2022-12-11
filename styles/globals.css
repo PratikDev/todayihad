@@ -1,20 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300&display=swap");
 
-:root {
-  --spacing-px: 15px;
-  --spacing-vw: 1vw;
-  --r: 0;
-  --g: 173;
-  --b: 255;
-  --a: 1;
-  --brand-color: rgba(var(--r), var(--g), var(--b), var(--a));
-  --dark-icon: #515b60;
-  --dark-icon-var-2: #4a4a4a;
-  --light-icon: #d7d9da;
-  --color-dark: #39464c;
-  --color-light: #cccccc;
-}
-
 html {
   color-scheme: dark;
 }
@@ -28,8 +13,7 @@ body {
 
 body {
   color: white;
-  --a: 0.1;
-  background-color: rgba(var(--r), var(--g), var(--b), var(--a));
+  background-color: rgba(0, 173, 255, 0.1);
 }
 
 a {
@@ -44,23 +28,6 @@ a:hover {
 
 * {
   box-sizing: border-box;
-}
-
-.brand-bg {
-  background-color: var(--brand-color);
-}
-
-.brand-bg:not(.no-hover):hover {
-  background-color: rgba(var(--r), var(--g), var(--b), 0.9);
-}
-
-.brand-border {
-  border-color: var(--brand-color) !important;
-}
-
-.brand-text,
-.brand-text:hover {
-  color: var(--brand-color);
 }
 
 .objectFit-contain {

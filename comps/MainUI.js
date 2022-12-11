@@ -18,7 +18,7 @@ function MainUI() {
       <div
         className={`${styles.post_list} d-flex flex-column align-items-center justify-content-center gap-3`}
       >
-        {[1, 2, 3].map((x, index) => (
+        {[1, 2, 3, 4].map((x, index) => (
           <Post key={index} count={x} />
         ))}
       </div>
