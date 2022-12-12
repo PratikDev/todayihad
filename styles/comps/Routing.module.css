@@ -1,0 +1,23 @@
+.route_btn {
+  min-height: var(--routing-btn);
+}
+
+.wrapper {
+  height: calc(var(--routing-btn) + (1rem * 2));
+  transition: height 200ms ease-in-out;
+}
+
+.wrapper:focus-within {
+  height: calc((var(--routing-btn) * 5) + (1rem * 2) + (1rem * 4) + 30px);
+}
+
+.wrapper:focus-within > svg:first-child {
+  fill: rgba(255, 255, 255, 0.1);
+  cursor: default;
+}
+
+@media screen and (max-width: 480px) {
+  .route_btn {
+    height: 15px;
+  }
+}
