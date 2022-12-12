@@ -2,12 +2,12 @@
 import { useState } from "react";
 
 // comps imports
-import Post from "../comps/MainUI_comps/Post";
-import UserInfo from "../comps/MainUI_comps/UserInfo";
+import Post from "../comps/Pages_comps/Post";
+import UserInfo from "../comps/Pages_comps/User/UserInfo";
 import OffCanvas from "../comps/utils/OffCanvas";
 
 // styles imports
-import styles from "../styles/comps/MainUI.module.css";
+import styles from "../styles/Pages/User.module.css";
 
 function User() {
   const [offCanvasShow, setOffCanvasShow] = useState("");

@@ -1,4 +1,4 @@
-import styles from "../styles/Settings.module.css";
+import styles from "../styles/Pages/Settings.module.css";
 
 function settings() {
   return (
@@ -93,6 +93,7 @@ function settings() {
         <b className="text-light">TodayiHad</b> ?{" "}
         <a
           href="https://twitter.com/pratik_and_dev"
+          target={`_blank`}
           className="text-decoration-underline"
         >
           Pratik

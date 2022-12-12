@@ -1,8 +1,8 @@
 // comps imports
-import Post from "../comps/MainUI_comps/Post";
+import Post from "../comps/Pages_comps/Post";
 
 // styles imports
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Pages/Home.module.css";
 
 export default function Home() {
   return (

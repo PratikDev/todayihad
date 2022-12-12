@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "../styles/signin.module.css";
+import styles from "../styles/Pages/Signin.module.css";
 
 function signin() {
   return (

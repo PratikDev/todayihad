@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/globals.css";
 
 // comp imports
-import Routing from "../comps/Routing";
+import Routing from "../comps/Pages_comps/Routing";
 
 function MyApp({ Component, pageProps }) {
   return (

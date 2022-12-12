@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRef } from "react";
 
 // styles imports
-import styles from "../../styles/comps/UserInfo.module.css";
+import styles from "../../../styles/comps/UserInfo.module.css";
 
 function UserInfo({ offcanvas }) {
   const img_upload = useRef();
