@@ -8,8 +8,10 @@ import { useEffect, useRef, useState } from "react";
 // style imports
 import styles from "../../styles/comps/Post.module.css";
 
-function Post({ count }) {
-  const [caption_expand, setCaption_expand] = useState(false);
+function Post({ count, separate }) {
+  const [caption_expand, setCaption_expand] = useState(separate);
+
+  const CustomLink = !separate ? Link : "div";
 
   const seeLessBtn = useRef();
 
@@ -25,7 +27,7 @@ function Post({ count }) {
   const prior = count === 1;
 
   return (
-    <div className={`bg-secondary bg-opacity-25 rounded-1 p-4`}>
+    <div className={`bg-secondary bg-opacity-25 rounded-1 p-4 mx-auto`}>
       <div className="d-flex flex-column align-items-center justify-content-between gap-4 p-1">
         <div className="d-flex align-items-center justify-content-between w-100">
           <Link href="/user" className={`d-flex align-items-center gap-2`}>
@@ -125,7 +127,7 @@ function Post({ count }) {
               explicabo nihil quis recusandae consectetur quos, deserunt,
               praesentium corrupti repudiandae deleniti.
             </>
-            {caption_expand && (
+            {caption_expand && !separate && (
               <i
                 className="cursor fw-bold text px-2 text-muted"
                 ref={seeLessBtn}
@@ -142,8 +144,8 @@ function Post({ count }) {
             readOnly
             checked={caption_expand}
           />
-          <Link
-            href={`/post`}
+          <CustomLink
+            href={!separate ? `/post` : undefined}
             className={`w-100 d-flex align-items-center justify-content-center position-relative`}
           >
             <Image
@@ -156,7 +158,7 @@ function Post({ count }) {
               33vw"
               className={`objectFit-contain position-relative ${styles.post_media}`}
             />
-          </Link>
+          </CustomLink>
         </div>
 
         <div

@@ -1,0 +1,23 @@
+.comment_text {
+  font-size: 14px;
+}
+
+@media screen and (max-width: 480px) {
+  .commenter_dp {
+    width: 40px;
+    height: 40px;
+  }
+
+  .comment_content {
+    font-size: 13px;
+    padding: unset !important;
+  }
+
+  .comment_text {
+    font-size: 12px;
+  }
+
+  .comment_time {
+    font-size: 11px;
+  }
+}
