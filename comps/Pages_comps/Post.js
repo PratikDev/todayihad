@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../../styles/comps/Post.module.css";
 
 function Post({ count, separate }) {
-  const [caption_expand, setCaption_expand] = useState(separate);
+  const [caption_expand, setCaption_expand] = useState(separate || false);
 
   const CustomLink = !separate ? Link : "div";
 

@@ -10,7 +10,7 @@ function Notifications() {
 
   const handleClick = ({ target: { classList } }) => {
     if (!classList.contains("user_link")) {
-      router.push(`/`);
+      router.push(`/post`);
     }
   };
   return (

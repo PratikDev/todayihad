@@ -7,7 +7,7 @@ import styles from "../../../styles/comps/Comment.module.css";
 function Comment() {
   return (
     <>
-      <div className="d-flex gap-3 w-100 align-items-start mt-4">
+      <div className="d-flex gap-3 w-100 align-items-start mt-3">
         <a href="./" className="mt-1">
           <Image
             src="/preview_img.png"
