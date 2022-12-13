@@ -8,7 +8,7 @@ function settings() {
       >
         <div className={`d-flex flex-column gap-3`}>
           <div className="d-flex align-items-center justify-content-between p-2 px-3 border-bottom border-secondary border-opacity-25">
-            <label htmlFor="hide_me" className="text">
+            <label htmlFor="hide_me">
               <h6 className={`${styles.title}`}>Hide Me</h6>
               <p className={`text-muted mb-2 ${styles.desc}`}>
                 Prevent users to check my profile
@@ -21,7 +21,7 @@ function settings() {
             />
           </div>
           <div className="d-flex align-items-center justify-content-between p-2 px-3 border-bottom border-secondary border-opacity-25">
-            <label htmlFor="hide_username" className="text">
+            <label htmlFor="hide_username">
               <h6 className={`${styles.title}`}>Hide Username</h6>
               <p className={`text-muted mb-2 ${styles.desc}`}>
                 Don't show my username on my posts
@@ -34,7 +34,20 @@ function settings() {
             />
           </div>
           <div className="d-flex align-items-center justify-content-between p-2 px-3 border-bottom border-secondary border-opacity-25">
-            <label htmlFor="feed_pref" className="text">
+            <label htmlFor="hide_username">
+              <h6 className={`${styles.title}`}>Hide Email</h6>
+              <p className={`text-muted mb-2 ${styles.desc}`}>
+                Keep my email private
+              </p>
+            </label>
+            <input
+              type="checkbox"
+              className={`cursor ${styles.checkbox}`}
+              id="hide_username"
+            />
+          </div>
+          <div className="d-flex align-items-center justify-content-between p-2 px-3 border-bottom border-secondary border-opacity-25">
+            <label htmlFor="feed_pref">
               <h6 className={`${styles.title}`}>Feed Settings</h6>
               <p className={`text-muted mb-2 ${styles.desc}`}>
                 Sort my feed based on...

@@ -2,11 +2,11 @@ function OffCanvas({ children, show, setShow }) {
   return (
     <>
       <div
-        className={`d-flex align-items-center offcanvas offcanvas-end ${show}`}
+        className={`d-flex align-items-center offcanvas offcanvas-start ${show}`}
         tabIndex={-1}
         style={{
           backgroundColor: `#27363E`,
-          zIndex: 1,
+          zIndex: 2,
           visibility: `visible`,
         }}
       >
@@ -14,7 +14,7 @@ function OffCanvas({ children, show, setShow }) {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 320 512"
-          className="position-absolute p-2 bottom-0 end-0"
+          className="position-absolute p-2 bottom-0 end-0 d-sm-none"
           fill="rgba(255,255,255,0.75)"
           width={50}
           height={50}
@@ -30,6 +30,7 @@ function OffCanvas({ children, show, setShow }) {
         style={{
           opacity: `${show.length ? `1` : `0`}`,
           pointerEvents: `${show.length ? `unset` : `none`}`,
+          zIndex: 1,
         }}
         onClick={() => {
           setShow("");

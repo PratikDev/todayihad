@@ -15,6 +15,8 @@ function User() {
     <div
       className={`d-flex justify-content-center gap-5 py-3 mx-auto ${styles.content}`}
     >
+      <UserInfo />
+
       <div
         className={`${styles.post_list} d-flex flex-column align-items-center justify-content-center gap-3`}
       >
@@ -22,9 +24,8 @@ function User() {
           <Post key={index} count={x} />
         ))}
       </div>
-      <UserInfo />
       <button
-        className={`btn position-fixed bottom-0 end-0 bg-white p-0 pt-3 ps-3 rounded-0 d-lg-none d-block ${styles.menu_btn}`}
+        className={`btn position-fixed bottom-0 start-0 bg-white p-0 pt-3 pe-3 rounded-0 d-lg-none d-block ${styles.menu_btn}`}
         onClick={() => {
           setOffCanvasShow("show");
         }}
