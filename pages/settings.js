@@ -7,6 +7,7 @@ function settings() {
         className={`d-flex flex-column justify-content-between gap-5 w-75 mx-auto pt-3 pb-5 ${styles.wrapper}`}
       >
         <div className={`d-flex flex-column gap-3`}>
+          <h2>Settings</h2>
           <div className="d-flex align-items-center justify-content-between p-2 px-3 border-bottom border-secondary border-opacity-25">
             <label htmlFor="hide_me">
               <h6 className={`${styles.title}`}>Hide Me</h6>

@@ -39,6 +39,20 @@
   font-size: 11px;
 }
 
+.report_btn {
+  bottom: -20px;
+  right: 45px;
+  width: max-content;
+}
+
+.report_btn:hover {
+  background-color: #27363e !important;
+}
+
+.post_settings:focus-within .report_btn {
+  display: block !important;
+}
+
 @media screen and (max-width: 480px) {
   .post_caption {
     --font-size: 11px;
@@ -67,8 +81,23 @@
     padding: 0.25rem 0.5rem !important;
   }
 
-  .post_settings {
+  .post_settings > svg {
     width: 5px;
     height: 20px;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+  }
+
+  .report_btn {
+    padding: 3px 8px;
+  }
+
+  .report_btn > svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .report_btn > small {
+    font-size: 11px;
   }
 }
