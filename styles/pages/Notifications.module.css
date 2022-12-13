@@ -1,0 +1,8 @@
+.wrapper {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.notif:hover {
+  background-color: #212e38 !important;
+}
