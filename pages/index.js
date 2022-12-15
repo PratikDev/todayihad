@@ -1,8 +1,13 @@
 // comps imports
 import Post from "../comps/Pages_comps/Post";
 
+// firebase_init imports
+import { analytics, app } from "../firebase/firebase_init";
+
 // styles imports
 import styles from "../styles/Pages/Home.module.css";
+
+console.log({ app, analytics });
 
 export default function Home() {
   return (
