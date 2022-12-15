@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 // style imports
-import styles from "../../../styles/comps/Comment.module.css";
+import styles from "../../../styles/comps/Page_Post/Comment.module.css";
 
 function Comment() {
   return (

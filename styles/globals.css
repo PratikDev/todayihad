@@ -27,18 +27,18 @@ body::-webkit-scrollbar {
 }
 
 /* track*/
-::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track {
   background: transparent;
 }
 
 /* handle*/
-::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb {
   background: gray;
   border-radius: 50px;
 }
 
 /* handle on hover*/
-::-webkit-scrollbar-thumb:hover {
+body::-webkit-scrollbar-thumb:hover {
   background: #9b9999;
 }
 
@@ -81,4 +81,27 @@ a:hover {
   :root {
     --routing-btn: 15px;
   }
+}
+
+/* tiptap global styles */
+.ProseMirror {
+  min-height: 150px;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+.ProseMirror pre {
+  background-color: black;
+  padding: 1rem;
+}
+
+.ProseMirror a {
+  color: #0d6efd;
+  text-decoration: underline;
+}
+
+.ProseMirror p {
+  font-size: 14px;
 }
