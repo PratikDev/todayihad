@@ -13,6 +13,7 @@ import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import Link from "@tiptap/extension-link";
 import History from "@tiptap/extension-history";
+import HardBreak from "@tiptap/extension-hard-break";
 
 // reactjs imports
 import { useCallback } from "react";
@@ -72,8 +73,9 @@ const MenuBar = ({ editor }) => {
   }
 
   return (
-    <div className={`d-flex flex-wrap bg-secondary mb-3`}>
+    <div className={`d-flex flex-wrap bg-secondary bg-opacity-50 mb-3`}>
       <button
+        title="Bold (Ctrl/Cmd + B)"
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={`btn btn-sm border-0 rounded-0 ${
@@ -94,6 +96,7 @@ const MenuBar = ({ editor }) => {
         </svg>
       </button>
       <button
+        title="Italic(Ctrl/Cmd + I)"
         onClick={() => editor.chain().focus().toggleItalic().run()}
         disabled={!editor.can().chain().focus().toggleItalic().run()}
         className={`btn btn-sm border-0 rounded-0 ${
@@ -114,6 +117,7 @@ const MenuBar = ({ editor }) => {
         </svg>
       </button>
       <button
+        title="Strike(Ctrl/Cmd + Shift + X)"
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={!editor.can().chain().focus().toggleStrike().run()}
         className={`btn btn-sm border-0 rounded-0 ${
@@ -134,6 +138,7 @@ const MenuBar = ({ editor }) => {
         </svg>
       </button>
       <button
+        title="Heading(Ctrl/Cmd + Alt + 2)"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={`btn btn-sm border-0 rounded-0 ${
           editor.isActive("heading", { level: 2 })
@@ -153,7 +158,9 @@ const MenuBar = ({ editor }) => {
         </svg>
       </button>
       <button
+        title="Bullet List(Ctrl/Cmd + Shift + 8)"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
+        disabled={!editor.can().chain().focus().toggleBulletList().run()}
         className={`btn btn-sm border-0 rounded-0 ${
           editor.isActive("bulletList")
             ? "btn-dark border border-light"
@@ -172,7 +179,9 @@ const MenuBar = ({ editor }) => {
         </svg>
       </button>
       <button
+        title="Link"
         onClick={setLink}
+        disabled={!editor.can().chain().focus().setLink().run()}
         className={`btn btn-sm border-0 rounded-0 ${
           editor.isActive("link")
             ? "btn-dark border border-light"
@@ -191,6 +200,7 @@ const MenuBar = ({ editor }) => {
         </svg>
       </button>
       <button
+        title="Code (Ctrl/Cmd + E)"
         onClick={() => editor.chain().focus().toggleCode().run()}
         disabled={!editor.can().chain().focus().toggleCode().run()}
         className={`btn btn-sm border-0 rounded-0 ${
@@ -211,7 +221,9 @@ const MenuBar = ({ editor }) => {
         </svg>
       </button>
       <button
+        title="Code Block(Ctrl/Cmd + Alt + C)"
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        disabled={!editor.can().chain().focus().toggleCodeBlock().run()}
         className={`btn btn-sm border-0 rounded-0 ${
           editor.isActive("codeBlock")
             ? "btn-dark border border-light"
@@ -252,12 +264,13 @@ export default function RichEditor() {
         validate: (href) => isValidate(href, true),
       }),
       History,
+      HardBreak,
     ],
   });
 
   return (
     <div
-      className={`d-flex flex-column border border-secondary overflow-hidden rounded-2`}
+      className={`d-flex flex-column border border-secondary overflow-hidden mb-4 rounded-1`}
     >
       <MenuBar editor={editor} />
       <EditorContent

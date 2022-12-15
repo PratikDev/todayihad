@@ -14,6 +14,7 @@
     "@tiptap/extension-code": "^2.0.0-beta.207",
     "@tiptap/extension-code-block": "^2.0.0-beta.207",
     "@tiptap/extension-document": "^2.0.0-beta.207",
+    "@tiptap/extension-hard-break": "^2.0.0-beta.207",
     "@tiptap/extension-heading": "^2.0.0-beta.207",
     "@tiptap/extension-history": "^2.0.0-beta.207",
     "@tiptap/extension-italic": "^2.0.0-beta.207",

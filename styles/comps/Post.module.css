@@ -13,10 +13,6 @@
   letter-spacing: 1.3px;
 }
 
-.post_caption::selection {
-  background-color: gray;
-}
-
 .post_caption:has(+ .expand_btn:not(:checked)) {
   max-height: calc(var(--max-lines) * var(--font-size) * var(--line-height));
 }

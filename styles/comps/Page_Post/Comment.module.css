@@ -8,9 +8,8 @@
     height: 40px;
   }
 
-  .comment_content {
+  .commenter_name {
     font-size: 13px;
-    padding: unset !important;
   }
 
   .comment_text {

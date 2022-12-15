@@ -8,7 +8,7 @@ function Routing() {
   return (
     <div
       className={`position-fixed bottom-0 end-0 py-3 me-3 mb-5 bg-dark bg-opacity-50 border border-secondary border-opacity-75 rounded-pill d-flex flex-column-reverse justify-content-between align-items-center gap-3 overflow-hidden ${styles.wrapper}`}
-      tabIndex={1}
+      tabIndex={0}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
