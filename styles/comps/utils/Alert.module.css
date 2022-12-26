@@ -1,0 +1,15 @@
+.wrapper {
+  width: calc(100% - 32px);
+  max-width: 400px;
+  z-index: 500;
+}
+
+.content {
+  font-size: 14px;
+  transition: 300ms;
+  border-left: 10px var(--bs-border-style) rgb(var(--bs-danger-rgb));
+}
+
+.body {
+  flex: 1 1 100%;
+}
