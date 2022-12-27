@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Post from "../comps/Pages_comps/Post";
 import UserInfo from "../comps/Pages_comps/User/UserInfo";
 import OffCanvas from "../comps/utils/OffCanvas";
+import PostSkeleton from "../comps/utils/Post_Skeleton";
 
 // styles imports
 import styles from "../styles/Pages/User.module.css";
@@ -16,7 +17,7 @@ function User({ signedIn }) {
   // checking signed state
   const router = useRouter();
   useEffect(() => {
-    if (!signedIn) {
+    if (signedIn === false) {
       router.push(`/signin`);
       return;
     }
@@ -28,17 +29,18 @@ function User({ signedIn }) {
       className={`d-flex justify-content-center gap-5 py-3 mx-auto ${styles.content}`}
     >
       <UserInfo
-        username={signedIn.displayName}
-        useremail={signedIn.email}
-        userphoto={signedIn.photoURL}
+        username={signedIn?.displayName}
+        useremail={signedIn?.email}
+        userphoto={signedIn?.photoURL}
+        loading={signedIn === undefined}
       />
 
       <div
         className={`${styles.post_list} d-flex flex-column align-items-center justify-content-center gap-3`}
       >
-        {[1, 2, 3, 4].map((x, index) => (
-          <Post key={index} count={x} />
-        ))}
+        {signedIn === undefined
+          ? [1, 2, 3, 4].map((x) => <PostSkeleton key={x} />)
+          : [1, 2, 3, 4].map((x, index) => <Post key={index} count={x} />)}
       </div>
       <button
         className={`btn position-fixed bottom-0 start-0 bg-white p-0 pt-3 pe-3 rounded-0 d-lg-none d-block ${styles.menu_btn}`}
@@ -58,7 +60,13 @@ function User({ signedIn }) {
       </button>
 
       <OffCanvas show={offCanvasShow} setShow={setOffCanvasShow}>
-        <UserInfo offcanvas />
+        <UserInfo
+          offcanvas
+          username={signedIn?.displayName}
+          useremail={signedIn?.email}
+          userphoto={signedIn?.photoURL}
+          loading={signedIn === undefined}
+        />
       </OffCanvas>
     </div>
   );
