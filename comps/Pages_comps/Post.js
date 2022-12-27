@@ -46,7 +46,10 @@ function Post({ count, separate }) {
               </small>
             </div>
           </Link>
-          <div className={`position-relative ${styles.post_settings}`}>
+          <div
+            className={`position-relative ${styles.post_settings}`}
+            tabIndex={0}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 128 512"

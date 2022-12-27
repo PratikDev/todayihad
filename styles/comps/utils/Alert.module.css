@@ -2,12 +2,14 @@
   width: calc(100% - 32px);
   max-width: 400px;
   z-index: 500;
+  transition: 300ms;
 }
 
 .content {
   font-size: 14px;
-  transition: 300ms;
-  border-left: 10px var(--bs-border-style) rgb(var(--bs-danger-rgb));
+  border-left-width: 10px;
+  border-left-style: var(--bs-border-style);
+  border-color: rgb(var(--bs-danger-rgb));
 }
 
 .body {

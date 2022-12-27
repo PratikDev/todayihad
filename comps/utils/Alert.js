@@ -1,12 +1,21 @@
 // styles imports
 import styles from "../../styles/comps/utils/Alert.module.css";
 
-function Alert({ show }) {
+// reactjs imports
+import { useState } from "react";
+
+function Alert({ show, message }) {
+  const [innerShow, SetinnerShow] = useState(show);
+
+  const timeout = setTimeout(() => {
+    SetinnerShow(false);
+  }, 3000);
+
   return (
     <div
       className={`${styles.wrapper} position-fixed bottom-0 start-50`}
       style={{
-        transform: `translate(-50%, ${show ? `0px` : `100px`})`,
+        transform: `translate(-50%, ${innerShow ? `0px` : `100px`})`,
       }}
     >
       <div
@@ -15,12 +24,16 @@ function Alert({ show }) {
       >
         <div className={`${styles.body} alert-body`}>
           <div className={`fw-bold`}>Oopps!!</div>
-          <p className="light m-0">You have no right to do this</p>
+          <p className="light m-0">{message}</p>
         </div>
         <button
           type="button"
           className="btn-close btn-close-white ms-2"
           aria-label="Close"
+          onClick={() => {
+            SetinnerShow(false);
+            clearTimeout(timeout);
+          }}
         ></button>
       </div>
     </div>

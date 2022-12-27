@@ -27,9 +27,14 @@ function signin() {
     setSigningInState({ ...signingInState, [prop]: value });
   };
 
+  // updating error to false after 3s, if error is true
   useEffect(() => {
-    console.log({ error, signingInState });
-  }, [error, signingInState]);
+    if (!!error) {
+      setTimeout(() => {
+        setError(false);
+      }, 3500);
+    }
+  }, [error]);
 
   return (
     <div
@@ -152,7 +157,7 @@ function signin() {
         </button>
       </div>
 
-      <Alert show />
+      {!!error && <Alert show message={error} />}
     </div>
   );
 }
