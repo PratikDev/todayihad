@@ -121,6 +121,15 @@ function signin() {
         </button>
         <button
           className={`btn d-flex align-items-center justify-content-evenly gap-2 border rounded-1 w-75 text-light py-2 ${styles.sign_in_btn}`}
+          onClick={async () => {
+            const { result, errorCode } = await providerSignIn(
+              "facebook",
+              handleSigningInState
+            );
+            if (!result) {
+              setError(errorCode);
+            }
+          }}
           disabled={signingInState.facebook}
         >
           {signingInState.facebook ? (
@@ -157,7 +166,16 @@ function signin() {
         </button>
       </div>
 
-      {!!error && <Alert show message={error} />}
+      {!!error && (
+        <Alert
+          show
+          message={
+            typeof error === `object`
+              ? error.message.toString()
+              : error.toString()
+          }
+        />
+      )}
     </div>
   );
 }
