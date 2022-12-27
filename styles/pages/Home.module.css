@@ -5,3 +5,12 @@
 .post_list {
   max-width: 800px;
 }
+
+.skeleton {
+  animation: skeleton 2s ease-in-out infinite alternate;
+}
+@keyframes skeleton {
+  50% {
+    opacity: 0.5;
+  }
+}

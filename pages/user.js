@@ -1,5 +1,8 @@
 // reactjs imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+// nextjs imports
+import { useRouter } from "next/navigation";
 
 // comps imports
 import Post from "../comps/Pages_comps/Post";
@@ -9,13 +12,26 @@ import OffCanvas from "../comps/utils/OffCanvas";
 // styles imports
 import styles from "../styles/Pages/User.module.css";
 
-function User() {
+function User({ signedIn }) {
+  // checking signed state
+  const router = useRouter();
+  useEffect(() => {
+    if (!signedIn) {
+      router.push(`/signin`);
+      return;
+    }
+  }, [signedIn]);
+
   const [offCanvasShow, setOffCanvasShow] = useState("");
   return (
     <div
       className={`d-flex justify-content-center gap-5 py-3 mx-auto ${styles.content}`}
     >
-      <UserInfo />
+      <UserInfo
+        username={signedIn.displayName}
+        useremail={signedIn.email}
+        userphoto={signedIn.photoURL}
+      />
 
       <div
         className={`${styles.post_list} d-flex flex-column align-items-center justify-content-center gap-3`}

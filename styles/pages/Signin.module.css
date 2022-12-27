@@ -26,6 +26,15 @@
   aspect-ratio: 1.4571;
 }
 
+.skeleton {
+  animation: skeleton 2s ease-in-out infinite alternate;
+}
+@keyframes skeleton {
+  50% {
+    opacity: 0.5;
+  }
+}
+
 @media screen and (max-width: 1200px) {
   .desc {
     font-size: 2.4vw;
@@ -47,6 +56,10 @@
 }
 
 @media screen and (max-width: 600px) {
+  .skeleton {
+    padding-bottom: 1.5rem !important;
+  }
+
   .desc {
     width: 75% !important;
     font-size: 1rem;

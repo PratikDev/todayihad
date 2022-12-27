@@ -8,7 +8,7 @@ import { useRef } from "react";
 // styles imports
 import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
 
-function UserInfo({ offcanvas }) {
+function UserInfo({ offcanvas, username, useremail, userphoto }) {
   const img_upload = useRef();
 
   return (
@@ -27,8 +27,8 @@ function UserInfo({ offcanvas }) {
           className={`position-relative d-flex align-items-center justify-content-center mx-auto ${styles.user_dp_sec}`}
         >
           <Image
-            src="/preview_img.png"
-            alt="user9898"
+            src={userphoto || `/blank_user.jpg`}
+            alt={username || `user`}
             width={150}
             height={150}
             priority={!offcanvas ? true : false}
@@ -83,7 +83,7 @@ function UserInfo({ offcanvas }) {
               className={`flex-grow-1 bg-secondary bg-opacity-25 rounded-1 py-2 px-3 ${styles.ltr_space_2} ${styles.user_info_text_length}`}
               title="User9898"
             >
-              User9898
+              {username || `username`}
             </span>
           </div>
 
@@ -103,7 +103,7 @@ function UserInfo({ offcanvas }) {
               className={`flex-grow-1 bg-secondary bg-opacity-25 rounded-1 py-2 px-3 ${styles.ltr_space_2} ${styles.user_info_text_length}`}
               title="example@user.com"
             >
-              example@user.com
+              {useremail || `user email`}
             </span>
           </div>
         </div>
