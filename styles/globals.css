@@ -2,6 +2,7 @@
 
 :root {
   --routing-btn: 25px;
+  --bg-brand: rgb(16 33 42);
 }
 
 html {
@@ -17,7 +18,7 @@ body {
 
 body {
   color: white;
-  background-color: rgba(0, 173, 255, 0.1);
+  background-color: var(--bg-brand);
 }
 
 /*For Chrome, Safari and Opera*/
