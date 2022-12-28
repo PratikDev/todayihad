@@ -3,13 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 // reactjs imports
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 // styles imports
 import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
+
+// comps imports
 import PreviewModal from "../../utils/PreviewModal";
 
 function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
+  // image upload btn ref
+  const img_upload = useRef();
+
   // image preview modal state and function
   const [showModal, setShowModal] = useState(false);
   function showImgPreview({
@@ -32,7 +37,16 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
 
   // new post modal window
   function newPostModal() {
-    console.log(true);
+    setShowModal(true);
+  }
+
+  // hide modal
+  function hideModal() {
+    setShowModal(false);
+
+    // reseting input value
+    const { current } = img_upload;
+    current.value = ``;
   }
 
   return (
@@ -80,6 +94,7 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
                   </div>
                 </label>
                 <input
+                  ref={img_upload}
                   type="file"
                   accept=".png, .jpg, .jpeg"
                   name="photo"
@@ -200,8 +215,8 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
       {!loading && (
         <PreviewModal
           show={!!showModal}
-          onClose={() => setShowModal(false)}
-          photo={!!showModal ? showModal : undefined}
+          onClose={hideModal}
+          photo={typeof showModal === `string` ? showModal : undefined}
         />
       )}
     </>

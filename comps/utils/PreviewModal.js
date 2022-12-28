@@ -36,12 +36,12 @@ function PreviewModal({ photo, show, onClose }) {
               <>
                 <RichEditor post />
                 <div className="border border-2 d-flex align-items-center justify-content-center w-100 flex-grow-1">
-                  <img
+                  {/* <img
                     src={photo}
                     alt="me"
                     className={`${styles.post_img_preview} w-100 h-100 objectFit-contain`}
-                  />
-                  {/* Drop your photo here */}
+                  /> */}
+                  Drop your photo here
                 </div>
               </>
             )}
