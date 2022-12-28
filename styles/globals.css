@@ -86,7 +86,7 @@ a:hover {
 
 /* tiptap global styles */
 .ProseMirror {
-  min-height: 150px;
+  min-height: 100%;
 }
 
 .ProseMirror:focus {

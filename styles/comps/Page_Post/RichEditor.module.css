@@ -1,6 +1,10 @@
 .mirrorWrapper {
-  resize: vertical;
   min-height: 150px;
+  height: 160px;
+}
+
+.mirrorWrapper:not(.post) {
+  resize: vertical;
 }
 
 /*For Chrome, Safari and Opera*/

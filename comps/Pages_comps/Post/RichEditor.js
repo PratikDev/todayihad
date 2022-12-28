@@ -138,8 +138,8 @@ const MenuBar = ({ editor }) => {
         </svg>
       </button>
       <button
-        title="Heading(Ctrl/Cmd + Alt + 2)"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+        title="Heading(Ctrl/Cmd + Alt + 4)"
+        onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
         className={`btn btn-sm border-0 rounded-0 ${
           editor.isActive("heading", { level: 2 })
             ? "btn-dark border border-light"
@@ -245,7 +245,7 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-export default function RichEditor() {
+export default function RichEditor({ post }) {
   const editor = useEditor({
     extensions: [
       Document,
@@ -256,7 +256,7 @@ export default function RichEditor() {
       Strike,
       Code,
       CodeBlock,
-      Heading.configure({ levels: [2] }),
+      Heading.configure({ levels: [4] }),
       ListItem,
       BulletList,
       Link.configure({
@@ -274,7 +274,9 @@ export default function RichEditor() {
     >
       <MenuBar editor={editor} />
       <EditorContent
-        className={`flex-grow-1 px-3 overflow-auto ${styles.mirrorWrapper}`}
+        className={`flex-grow-1 px-3 overflow-auto ${styles.mirrorWrapper} ${
+          post ? styles.post : ``
+        }`}
         editor={editor}
       />
     </div>

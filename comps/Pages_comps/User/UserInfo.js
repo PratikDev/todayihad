@@ -7,12 +7,12 @@ import { useState } from "react";
 
 // styles imports
 import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
-import ImgPreviewModal from "../../utils/ImgPreviewModal";
+import PreviewModal from "../../utils/PreviewModal";
 
 function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
   // image preview modal state and function
   const [showModal, setShowModal] = useState(false);
-  function showPreview({
+  function showImgPreview({
     target: {
       files: [photo],
     },
@@ -28,6 +28,11 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
         setShowModal(src);
       }
     }
+  }
+
+  // new post modal window
+  function newPostModal() {
+    console.log(true);
   }
 
   return (
@@ -82,7 +87,7 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
                   aria-hidden
                   hidden
                   onChange={(event) => {
-                    showPreview(event);
+                    showImgPreview(event);
                   }}
                 />
               </>
@@ -154,6 +159,7 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
               loading ? `${styles.skeleton} py-3` : ``
             }`}
             disabled={loading}
+            onClick={newPostModal}
           >
             {!loading ? (
               <>
@@ -192,7 +198,7 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
         </div>
       </div>
       {!loading && (
-        <ImgPreviewModal
+        <PreviewModal
           show={!!showModal}
           onClose={() => setShowModal(false)}
           photo={!!showModal ? showModal : undefined}
