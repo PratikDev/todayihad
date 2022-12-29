@@ -212,9 +212,8 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
           )}
         </div>
       </div>
-      {!loading && (
+      {!loading && !!showModal && (
         <PreviewModal
-          show={!!showModal}
           onClose={hideModal}
           photo={typeof showModal === `string` ? showModal : undefined}
         />

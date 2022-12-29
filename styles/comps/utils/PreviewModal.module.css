@@ -1,13 +1,5 @@
 .customModal {
-  opacity: 0;
-  pointer-events: none;
-  transition: 400ms opacity ease-in-out;
-}
-
-.show {
-  opacity: 1;
   z-index: 9999;
-  pointer-events: all;
 }
 
 .customModalDialog {

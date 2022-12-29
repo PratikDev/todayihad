@@ -5,12 +5,10 @@ import NewPostImgUploadArea from "./utils_comp/NewPostImgUploadArea";
 // styles imports
 import styles from "../../styles/comps/utils/PreviewModal.module.css";
 
-function PreviewModal({ photo, show, onClose }) {
+function PreviewModal({ photo, onClose }) {
   return (
     <div
-      className={`${styles.customModal} ${
-        show ? styles.show : ``
-      } modal-backdrop vw-100 vh-100 bg-dark bg-opacity-75 position-fixed top-0 start-0 d-flex align-items-center justify-content-center`}
+      className={`${styles.customModal} modal-backdrop vw-100 vh-100 bg-dark bg-opacity-75 position-fixed top-0 start-0 d-flex align-items-center justify-content-center`}
       tabIndex="-1"
       aria-labelledby="image preview"
       aria-hidden="true"
