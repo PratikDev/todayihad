@@ -20,10 +20,6 @@
   max-height: calc(100vh - 11rem);
 }
 
-.post_img_preview {
-  max-height: calc(50vh - 3rem);
-}
-
 @media screen and (max-width: 480px) {
   .customModalDialog {
     width: calc(100% - 2rem);

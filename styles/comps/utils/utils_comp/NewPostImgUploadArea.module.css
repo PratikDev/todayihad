@@ -1,0 +1,7 @@
+.dropArea {
+  border-style: dashed;
+}
+
+.post_img_preview {
+  max-height: calc(50vh - 3rem);
+}
