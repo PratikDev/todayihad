@@ -1,3 +1,6 @@
+// reactjs imports
+import { useEffect } from "react";
+
 // comps imports
 import RichEditor from "../Pages_comps/Post/RichEditor";
 import NewPostImgUploadArea from "./utils_comp/NewPostImgUploadArea";
@@ -6,6 +9,21 @@ import NewPostImgUploadArea from "./utils_comp/NewPostImgUploadArea";
 import styles from "../../styles/comps/utils/PreviewModal.module.css";
 
 function PreviewModal({ photo, onClose }) {
+  // function for esc key press
+  function escFunc(event) {
+    if (event.key === `Escape`) {
+      onClose();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener(`keydown`, escFunc, true);
+
+    return () => {
+      document.removeEventListener(`keydown`, escFunc, true);
+    };
+  }, []);
+
   return (
     <div
       className={`${styles.customModal} modal-backdrop vw-100 vh-100 bg-dark bg-opacity-75 position-fixed top-0 start-0 d-flex align-items-center justify-content-center`}
