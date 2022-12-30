@@ -1,9 +1,6 @@
 // nextjs imports
 import { useRouter } from "next/navigation";
 
-// reactjs imports
-import { useEffect } from "react";
-
 // comps imports
 import Post from "../comps/Pages_comps/Post";
 import PostSkeleton from "../comps/utils/Post_Skeleton";
@@ -14,12 +11,10 @@ import styles from "../styles/Pages/Home.module.css";
 export default function Home({ signedIn }) {
   // checking signed state
   const router = useRouter();
-  useEffect(() => {
-    if (signedIn === false) {
-      router.push(`/signin`);
-      return;
-    }
-  }, [signedIn]);
+  if (signedIn === false) {
+    router.push(`/signin`);
+    return;
+  }
 
   return (
     <div className={`d-flex justify-content-center gap-5 py-3 mx-auto`}>

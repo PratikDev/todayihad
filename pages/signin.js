@@ -18,12 +18,10 @@ import Alert from "../comps/utils/Alert";
 function signin({ signedIn }) {
   // checking signed state
   const router = useRouter();
-  useEffect(() => {
-    if (signedIn) {
-      router.push(`/`);
-      return;
-    }
-  }, [signedIn]);
+  if (signedIn) {
+    router.push(`/`);
+    return;
+  }
 
   // error state
   const [error, setError] = useState(false);

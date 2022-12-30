@@ -64,7 +64,7 @@ function NewPostImgUploadArea() {
       {!!img && (
         <div className="position-relative">
           <div
-            className="position-absolute end-0 top-0 p-2 me-2 mt-2 rounded-circle bg-dark bg-opacity-75 d-flex align-items-center justify-content-center cursor border border-secondary border-opacity-75"
+            className="position-absolute end-0 top-0 p-2 me-1 mt-1 rounded-circle bg-dark bg-opacity-75 d-flex align-items-center justify-content-center cursor border border-secondary border-opacity-75"
             onClick={handleCancelMedia}
           >
             <svg
