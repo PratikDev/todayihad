@@ -15,7 +15,6 @@ function PreviewModal({ photo, onClose }) {
       onClose();
     }
   }
-
   useEffect(() => {
     document.addEventListener(`keydown`, escFunc, true);
 
@@ -64,12 +63,21 @@ function PreviewModal({ photo, onClose }) {
             >
               Cancel
             </button>
-            <button
-              type="button"
-              className={`btn btn-light ms-2 ${styles.modalBtn}`}
-            >
-              Upload
-            </button>
+            {!!photo ? (
+              <button
+                type="button"
+                className={`btn btn-light ms-2 ${styles.modalBtn}`}
+              >
+                Upload
+              </button>
+            ) : (
+              <button
+                type="button"
+                className={`btn btn-light ms-2 ${styles.modalBtn}`}
+              >
+                Post
+              </button>
+            )}
           </div>
         </div>
       </div>

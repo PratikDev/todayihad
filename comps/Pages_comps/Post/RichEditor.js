@@ -141,7 +141,7 @@ const MenuBar = ({ editor }) => {
         title="Heading(Ctrl/Cmd + Alt + 4)"
         onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
         className={`btn btn-sm border-0 rounded-0 ${
-          editor.isActive("heading", { level: 2 })
+          editor.isActive("heading", { level: 4 })
             ? "btn-dark border border-light"
             : "btn-outline-light"
         }`}
