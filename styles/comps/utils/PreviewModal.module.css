@@ -2,20 +2,21 @@
   z-index: 9999;
 }
 
+.customModalDialogWrapper {
+  max-width: 900px;
+}
+
 .customModalDialog {
   background-color: var(--bg-brand);
-  max-width: 900px;
-  max-height: calc(100vh - 4rem);
 }
 
 .modal_img {
-  max-height: calc(100vh - 11rem);
+  max-height: calc(100vh - 13rem);
 }
 
 @media screen and (max-width: 480px) {
-  .customModalDialog {
-    width: calc(100% - 2rem);
-    padding: 1rem 0.5rem !important;
+  .customModalDialogWrapper {
+    padding: 2rem !important;
   }
 }
 
@@ -30,7 +31,8 @@
     font-size: 11px;
   }
 
+  .customModalDialogWrapper,
   .customModalDialog {
-    padding: 0.5rem !important;
+    padding: 1rem !important;
   }
 }

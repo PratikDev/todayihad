@@ -36,48 +36,52 @@ function PreviewModal({ photo, onClose }) {
       }}
     >
       <div
-        className={`${styles.customModalDialog} p-4 rounded-1 overflow-auto`}
+        className={`${styles.customModalDialogWrapper} d-flex align-items-center justify-content-center p-5 h-100 w-100`}
       >
-        <div className="d-flex flex-column h-100">
-          <div
-            className={`d-flex flex-column justify-content-center flex-grow-1`}
-          >
-            {!!photo ? (
-              <img
-                src={photo}
-                alt="modal"
-                className={`${styles.modal_img} objectFit-contain w-100`}
-              />
-            ) : (
-              <>
-                <RichEditor post />
-                <NewPostImgUploadArea />
-              </>
-            )}
-          </div>
-          <div className="customModal-footer mt-3 text-end">
-            <button
-              type="button"
-              className={`btn btn-outline-secondary ${styles.modalBtn}`}
-              onClick={onClose}
+        <div
+          className={`${styles.customModalDialog} h-100 w-100 p-4 rounded-1 overflow-auto`}
+        >
+          <div className="d-flex flex-column h-100">
+            <div
+              className={`d-flex flex-column justify-content-center flex-grow-1`}
             >
-              Cancel
-            </button>
-            {!!photo ? (
+              {!!photo ? (
+                <img
+                  src={photo}
+                  alt="modal"
+                  className={`${styles.modal_img} objectFit-contain w-100`}
+                />
+              ) : (
+                <>
+                  <RichEditor post />
+                  <NewPostImgUploadArea />
+                </>
+              )}
+            </div>
+            <div className="customModal-footer mt-3 text-end">
               <button
                 type="button"
-                className={`btn btn-light ms-2 ${styles.modalBtn}`}
+                className={`btn btn-outline-secondary ${styles.modalBtn}`}
+                onClick={onClose}
               >
-                Upload
+                Cancel
               </button>
-            ) : (
-              <button
-                type="button"
-                className={`btn btn-light ms-2 ${styles.modalBtn}`}
-              >
-                Post
-              </button>
-            )}
+              {!!photo ? (
+                <button
+                  type="button"
+                  className={`btn btn-light ms-2 ${styles.modalBtn}`}
+                >
+                  Upload
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={`btn btn-light ms-2 ${styles.modalBtn}`}
+                >
+                  Post
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

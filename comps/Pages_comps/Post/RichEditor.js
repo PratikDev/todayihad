@@ -270,7 +270,9 @@ export default function RichEditor({ post }) {
 
   return (
     <div
-      className={`d-flex flex-column border border-secondary overflow-hidden mb-4 rounded-1`}
+      className={`d-flex flex-column border border-secondary overflow-hidden mb-4 rounded-1 ${
+        post ? `flex-grow-1` : ``
+      }`}
     >
       <MenuBar editor={editor} />
       <EditorContent
