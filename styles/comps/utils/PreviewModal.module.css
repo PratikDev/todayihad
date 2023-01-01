@@ -4,6 +4,7 @@
 
 .customModalDialogWrapper {
   max-width: 900px;
+  max-height: 900px;
 }
 
 .customModalDialog {
@@ -11,7 +12,7 @@
 }
 
 .modal_img {
-  max-height: calc(100vh - 13rem);
+  max-height: 600px;
 }
 
 @media screen and (max-width: 480px) {

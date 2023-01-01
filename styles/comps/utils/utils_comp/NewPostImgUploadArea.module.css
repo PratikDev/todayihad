@@ -3,5 +3,5 @@
 }
 
 .post_img_preview {
-  max-height: calc(50vh - 3rem);
+  max-height: 350px;
 }
