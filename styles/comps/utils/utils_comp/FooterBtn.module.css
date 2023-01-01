@@ -2,6 +2,10 @@
   .modalBtn {
     font-size: 13px;
   }
+
+  .textarea::placeholder {
+    font-size: 13px;
+  }
 }
 
 @media screen and (max-width: 360px), (max-height: 550px) {

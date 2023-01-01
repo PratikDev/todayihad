@@ -98,7 +98,7 @@ function NewPostImgUploadArea() {
             onDragLeave={(e) => handleDropLeave(e)}
             onDrop={(e) => handleDrop(e)}
           >
-            Drop your photo here or Choose a File
+            Drop or Choose an image (jpg, jpeg or png)
           </label>
           <input
             accept=".jpg, .jpeg, .png"

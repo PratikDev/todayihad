@@ -2,12 +2,11 @@
 import { useEffect } from "react";
 
 // comps imports
-import RichEditor from "../Pages_comps/Post/RichEditor";
 import NewPostImgUploadArea from "./utils_comp/NewPostImgUploadArea";
-import FooterBtn from "./utils_comp/FooterBtn";
 
 // styles imports
 import styles from "../../styles/comps/utils/PreviewModal.module.css";
+import footerBtnStyles from "../../styles/comps/utils/utils_comp/FooterBtn.module.css";
 
 function PreviewModal({ photo, onClose }) {
   // function for esc key press
@@ -54,13 +53,46 @@ function PreviewModal({ photo, onClose }) {
                     className={`${styles.modal_img} objectFit-contain w-100`}
                   />
                 </div>
-                <FooterBtn variant={`Upload`} onClose={onClose} />
+                <div className={`customModal-footer mt-3 text-end`}>
+                  <button
+                    type="button"
+                    className={`btn btn-outline-secondary ${footerBtnStyles.modalBtn}`}
+                    onClick={onClose}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn btn-light ms-2 ${footerBtnStyles.modalBtn}`}
+                  >
+                    Upload
+                  </button>
+                </div>
               </>
             ) : (
               <>
-                <RichEditor post onClose={onClose}>
-                  <NewPostImgUploadArea />
-                </RichEditor>
+                <textarea
+                  name="caption"
+                  id="caption"
+                  placeholder="Write what you had today..."
+                  className={`${footerBtnStyles.textarea} bg-transparent rounded-1 flex-grow-1 p-3 mb-5`}
+                ></textarea>
+                <NewPostImgUploadArea />
+                <div className={`customModal-footer mt-3 text-end`}>
+                  <button
+                    type="button"
+                    className={`btn btn-outline-secondary ${footerBtnStyles.modalBtn}`}
+                    onClick={onClose}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className={`btn btn-light ms-2 ${footerBtnStyles.modalBtn}`}
+                  >
+                    Post
+                  </button>
+                </div>
               </>
             )}
           </div>

@@ -83,26 +83,3 @@ a:hover {
     --routing-btn: 15px;
   }
 }
-
-/* tiptap global styles */
-.ProseMirror {
-  min-height: 100%;
-}
-
-.ProseMirror:focus {
-  outline: none;
-}
-
-.ProseMirror pre {
-  background-color: black;
-  padding: 1rem;
-}
-
-.ProseMirror a {
-  color: #0d6efd;
-  text-decoration: underline;
-}
-
-.ProseMirror p {
-  font-size: 14px;
-}
