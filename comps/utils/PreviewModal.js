@@ -1,8 +1,12 @@
 // reactjs imports
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // comps imports
+import Spinner from "./Spinner";
 import NewPostImgUploadArea from "./utils_comp/NewPostImgUploadArea";
+
+// firebase functions imports
+import { createPost } from "../../firebase/firebase_functions";
 
 // styles imports
 import styles from "../../styles/comps/utils/PreviewModal.module.css";
@@ -22,6 +26,48 @@ function PreviewModal({ photo, onClose }) {
       document.removeEventListener(`keydown`, escFunc, true);
     };
   }, []);
+
+  // setting post uploading state
+  const [uploading, setUploading] = useState(false);
+
+  // textarea ref
+  const textarea = useRef();
+
+  // handle post
+  function handlePost() {
+    if (textarea?.current) {
+      const {
+        current: { value },
+      } = textarea;
+
+      if (value.trim()) {
+        const content = value.trim();
+        createPost(content, setUploading);
+      }
+    }
+  }
+
+  // handle dp upload
+  function handleDpUpload() {
+    console.log(`handling dp upload`);
+  }
+
+  // handle submit function
+  function handleSubmit({ target: { innerText } }) {
+    switch (innerText) {
+      case `Post`:
+        handlePost();
+        break;
+
+      case `Upload`:
+        handleDpUpload();
+        break;
+
+      default:
+        onClose();
+        break;
+    }
+  }
 
   return (
     <div
@@ -72,6 +118,7 @@ function PreviewModal({ photo, onClose }) {
             ) : (
               <>
                 <textarea
+                  ref={textarea}
                   name="caption"
                   id="caption"
                   placeholder="Write what you had today..."
@@ -88,9 +135,21 @@ function PreviewModal({ photo, onClose }) {
                   </button>
                   <button
                     type="button"
+                    disabled={uploading}
                     className={`btn btn-light ms-2 ${footerBtnStyles.modalBtn}`}
+                    onClick={(e) => uploading && handleSubmit(e)}
                   >
-                    Post
+                    {uploading ? (
+                      <div
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      >
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                    ) : (
+                      `Post`
+                    )}
                   </button>
                 </div>
               </>

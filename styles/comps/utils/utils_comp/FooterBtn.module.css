@@ -1,3 +1,30 @@
+/*For Chrome, Safari and Opera*/
+/* width */
+.textarea::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* track */
+.textarea::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* handle */
+.textarea::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 50px;
+}
+
+/* handle on hover */
+.textarea::-webkit-scrollbar-thumb:hover {
+  background: #9b9999;
+}
+
+/* For IE, Edge add Firefox */
+.textarea {
+  scrollbar-width: 7px;
+}
+
 @media screen and (max-width: 480px), (max-height: 650px) {
   .modalBtn {
     font-size: 13px;

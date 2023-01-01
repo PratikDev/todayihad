@@ -1,5 +1,5 @@
 import { getAdditionalUserInfo, signInWithPopup, signOut } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db, auth, provider_google, provider_facebook } from "./firebase_init";
 
 const providerSignIn = async (provider_name, handleSigningInState) => {
@@ -104,4 +104,20 @@ const userSignOut = async () => {
   }
 };
 
-export { userSignOut, providerSignIn };
+const createPost = async (content, setUploading) => {
+  if (content) {
+    setUploading(true);
+    try {
+      // Add a new document in collection "posts"
+      const postDocRef = await addDoc(collection(db, "posts"), {
+        content,
+      });
+
+      setUploading(false);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+};
+
+export { userSignOut, providerSignIn, createPost };
