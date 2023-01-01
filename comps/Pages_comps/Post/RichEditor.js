@@ -18,6 +18,9 @@ import HardBreak from "@tiptap/extension-hard-break";
 // reactjs imports
 import { useCallback } from "react";
 
+// compos imports
+import FooterBtn from "../../utils/utils_comp/FooterBtn";
+
 // styles imports
 import styles from "../../../styles/comps/Page_Post/RichEditor.module.css";
 
@@ -37,6 +40,7 @@ function isValidate(href, config) {
   };
 }
 
+// menubar jsx
 const MenuBar = ({ editor }) => {
   const setLink = useCallback(() => {
     const previousUrl = editor.getAttributes("link").href;
@@ -245,7 +249,7 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-export default function RichEditor({ post }) {
+export default function RichEditor({ post, children, onClose }) {
   const editor = useEditor({
     extensions: [
       Document,
@@ -269,18 +273,22 @@ export default function RichEditor({ post }) {
   });
 
   return (
-    <div
-      className={`d-flex flex-column border border-secondary overflow-hidden mb-4 rounded-1 ${
-        post ? `flex-grow-1` : ``
-      }`}
-    >
-      <MenuBar editor={editor} />
-      <EditorContent
-        className={`flex-grow-1 px-3 overflow-auto ${styles.mirrorWrapper} ${
-          post ? styles.post : ``
+    <>
+      <div
+        className={`d-flex flex-column border border-secondary overflow-hidden mb-4 rounded-1 ${
+          post ? `flex-grow-1` : ``
         }`}
-        editor={editor}
-      />
-    </div>
+      >
+        <MenuBar editor={editor} />
+        <EditorContent
+          className={`flex-grow-1 px-3 overflow-auto ${styles.mirrorWrapper} ${
+            post ? styles.post : ``
+          }`}
+          editor={editor}
+        />
+      </div>
+      {children ? children : ``}
+      <FooterBtn variant={post ? `Post` : `Comment`} onClose={onClose} />
+    </>
   );
 }

@@ -21,17 +21,7 @@
   }
 }
 
-@media screen and (max-width: 480px), (max-height: 650px) {
-  .modalBtn {
-    font-size: 13px;
-  }
-}
-
 @media screen and (max-width: 360px), (max-height: 550px) {
-  .modalBtn {
-    font-size: 11px;
-  }
-
   .customModalDialogWrapper,
   .customModalDialog {
     padding: 1rem !important;
