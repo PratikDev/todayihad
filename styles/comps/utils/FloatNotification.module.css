@@ -1,0 +1,45 @@
+.notificationWrapper {
+  pointer-events: none;
+  z-index: 999999;
+}
+
+.notification {
+  pointer-events: all;
+  width: calc(100% - 1rem);
+  max-width: 400px;
+  height: fit-content;
+}
+
+.indicator {
+  width: 6px;
+  left: -4px;
+}
+
+.message {
+  font-size: 14.5px;
+}
+
+.closeBtnIcon {
+  fill: rgba(255, 255, 255, 0.3);
+}
+
+@media screen and (max-width: 576px) {
+  .message {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .title {
+    font-size: 14px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+
+  .closeBtnIcon {
+    width: 20px;
+    height: 20px;
+  }
+}

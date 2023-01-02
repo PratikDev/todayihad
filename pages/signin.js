@@ -9,22 +9,24 @@ import styles from "../styles/Pages/Signin.module.css";
 import { providerSignIn } from "../firebase/firebase_functions";
 
 // reactjs imports
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 // utils imports
 import Spinner from "../comps/utils/Spinner";
-import Alert from "../comps/utils/Alert";
+
+// context imports
+import { NotificationContext } from "../comps/utils/FloatNotification";
 
 function signin({ signedIn }) {
+  // get notification context
+  const showNotification = useContext(NotificationContext);
+
   // checking signed state
   const router = useRouter();
   if (signedIn) {
     router.push(`/`);
     return;
   }
-
-  // error state
-  const [error, setError] = useState(false);
 
   // signing in state
   const [signingInState, setSigningInState] = useState({
@@ -35,14 +37,20 @@ function signin({ signedIn }) {
     setSigningInState({ ...signingInState, [prop]: value });
   };
 
-  // updating error to false after 3s, if error is true
-  useEffect(() => {
-    if (!!error) {
-      setTimeout(() => {
-        setError(false);
-      }, 3500);
+  // handle OAuth sign in
+  const handleOAuth = async (provider) => {
+    const { result, errorCode } = await providerSignIn(
+      provider,
+      handleSigningInState
+    );
+    if (!result) {
+      showNotification({
+        title: `Oppss!!`,
+        message: errorCode,
+        variant: `danger`,
+      });
     }
-  }, [error]);
+  };
 
   return (
     <div
@@ -75,13 +83,7 @@ function signin({ signedIn }) {
             <button
               className={`btn d-flex align-items-center justify-content-evenly gap-2 border rounded-1 w-75 text-light py-2 ${styles.sign_in_btn}`}
               onClick={async () => {
-                const { result, errorCode } = await providerSignIn(
-                  "google",
-                  handleSigningInState
-                );
-                if (!result) {
-                  setError(errorCode);
-                }
+                handleOAuth(`google`);
               }}
               disabled={signingInState.google}
             >
@@ -141,13 +143,7 @@ function signin({ signedIn }) {
             <button
               className={`btn d-flex align-items-center justify-content-evenly gap-2 border rounded-1 w-75 text-light py-2 ${styles.sign_in_btn}`}
               onClick={async () => {
-                const { result, errorCode } = await providerSignIn(
-                  "facebook",
-                  handleSigningInState
-                );
-                if (!result) {
-                  setError(errorCode);
-                }
+                handleOAuth(`facebook`);
               }}
               disabled={signingInState.facebook}
             >
@@ -186,17 +182,6 @@ function signin({ signedIn }) {
           </>
         )}
       </div>
-
-      {!!error && (
-        <Alert
-          show
-          message={
-            typeof error === `object`
-              ? error.message.toString()
-              : error.toString()
-          }
-        />
-      )}
     </div>
   );
 }

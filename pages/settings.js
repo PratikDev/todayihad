@@ -35,7 +35,7 @@ function settings() {
             />
           </div>
           <div className="d-flex align-items-center justify-content-between p-2 px-3 border-bottom border-secondary border-opacity-25">
-            <label htmlFor="hide_username">
+            <label htmlFor="hide_email">
               <h6 className={`${styles.title}`}>Hide Email</h6>
               <p className={`text-muted mb-2 ${styles.desc}`}>
                 Keep my email private
@@ -44,7 +44,7 @@ function settings() {
             <input
               type="checkbox"
               className={`cursor ${styles.checkbox}`}
-              id="hide_username"
+              id="hide_email"
             />
           </div>
           <div className="d-flex align-items-center justify-content-between p-2 px-3 border-bottom border-secondary border-opacity-25">
