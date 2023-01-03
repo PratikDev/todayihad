@@ -2,16 +2,16 @@
 import { createContext, useEffect, useState } from "react";
 
 // styles imports
-import styles from "../../styles/comps/utils/FloatNotification.module.css";
+import styles from "../styles/contexts/NotificationContext.module.css";
 
 export const NotificationContext = createContext(() => {});
 
-function FloatNotification({ children }) {
+function NotificationContextComponent({ children }) {
   // TODO: remove it before building production
   const tempState = {
     title: `title`,
-    message: `a veryyy long messagee with some long text`,
-    variant: `danger`,
+    message: `a default type message`,
+    variant: `success`,
   };
 
   // mounting state
@@ -44,7 +44,7 @@ function FloatNotification({ children }) {
         >
           {!!show ? (
             <div
-              className={`${styles.notification} mx-auto my-2 px-3 py-2 rounded-1 d-flex align-items-center justify-content-between align-self-end bg-dark`}
+              className={`${styles.notification} mx-auto my-2 px-3 py-2 rounded-1 d-flex align-items-center justify-content-between align-self-end bg-dark border border-secondary border-opacity-25`}
             >
               <div className="body-wrapper position-relative">
                 <div
@@ -83,4 +83,4 @@ function FloatNotification({ children }) {
     </>
   );
 }
-export default FloatNotification;
+export default NotificationContextComponent;

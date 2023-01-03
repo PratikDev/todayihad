@@ -1,8 +1,5 @@
 // reactjs imports
-import { useEffect, useState } from "react";
-
-// nextjs imports
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 // comps imports
 import Post from "../comps/Pages_comps/Post";
@@ -13,32 +10,18 @@ import PostSkeleton from "../comps/utils/Post_Skeleton";
 // styles imports
 import styles from "../styles/Pages/User.module.css";
 
-function User({ signedIn }) {
-  // checking signed state
-  const router = useRouter();
-  useEffect(() => {
-    if (signedIn === false) {
-      router.push(`/signin`);
-      return;
-    }
-  }, [signedIn]);
-
+function User({ loading }) {
   const [offCanvasShow, setOffCanvasShow] = useState("");
   return (
     <div
       className={`d-flex justify-content-center gap-5 py-3 mx-auto ${styles.content}`}
     >
-      <UserInfo
-        username={signedIn?.displayName}
-        useremail={signedIn?.email}
-        userphoto={signedIn?.photoURL}
-        loading={signedIn === undefined}
-      />
+      <UserInfo />
 
       <div
         className={`${styles.post_list} d-flex flex-column align-items-center justify-content-center gap-3`}
       >
-        {signedIn === undefined
+        {loading
           ? [1, 2, 3, 4].map((x) => <PostSkeleton key={x} />)
           : [1, 2, 3, 4].map((x, index) => <Post key={index} count={x} />)}
       </div>
@@ -60,13 +43,7 @@ function User({ signedIn }) {
       </button>
 
       <OffCanvas show={offCanvasShow} setShow={setOffCanvasShow}>
-        <UserInfo
-          offcanvas
-          username={signedIn?.displayName}
-          useremail={signedIn?.email}
-          userphoto={signedIn?.photoURL}
-          loading={signedIn === undefined}
-        />
+        <UserInfo offcanvas />
       </OffCanvas>
     </div>
   );

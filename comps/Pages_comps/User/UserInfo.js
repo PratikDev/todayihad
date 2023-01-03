@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 // reactjs imports
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 // styles imports
 import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
@@ -11,7 +12,16 @@ import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
 // comps imports
 import PreviewModal from "../../utils/PreviewModal";
 
-function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
+function UserInfo({ offcanvas }) {
+  // using auth context
+  const authContext = useContext(AuthContext);
+
+  // getting info based on auth context
+  const loading = authContext === undefined;
+  const { displayName, email, photoURL } =
+    authContext ||
+    {}; /* use en empty object if authContext is undefined. can't destructure object keys from undefined */
+
   // image upload btn ref
   const img_upload = useRef();
 
@@ -68,8 +78,8 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
             {!loading ? (
               <>
                 <Image
-                  src={userphoto || `/blank_user.jpg`}
-                  alt={username || `user`}
+                  src={photoURL || `/blank_user.jpg`}
+                  alt={displayName || `user`}
                   width={150}
                   height={150}
                   priority={!offcanvas ? true : false}
@@ -138,9 +148,9 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
                 } flex-grow-1 bg-secondary bg-opacity-25 rounded-1 py-${
                   !loading ? `2` : `3`
                 } px-3 ${styles.ltr_space_2} ${styles.user_info_text_length}`}
-                title={!loading ? username || `username` : ``}
+                title={displayName || `username`}
               >
-                {!loading ? username || `username` : ``}
+                {!loading && (displayName || `username`)}
               </span>
             </div>
 
@@ -162,9 +172,9 @@ function UserInfo({ offcanvas, username, useremail, userphoto, loading }) {
                 } flex-grow-1 bg-secondary bg-opacity-25 rounded-1 py-${
                   !loading ? `2` : `3`
                 } px-3 ${styles.ltr_space_2} ${styles.user_info_text_length}`}
-                title={!loading ? useremail || `user email` : ``}
+                title={email || `user email`}
               >
-                {!loading ? useremail || `user email` : ``}
+                {!loading && (email || `user email`)}
               </span>
             </div>
           </div>

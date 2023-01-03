@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 // styles imports
 import styles from "../styles/pages/Notifications.module.css";
 
-function Notifications() {
+function notifications() {
   const router = useRouter();
 
   const handleClick = ({ target: { classList } }) => {
@@ -34,4 +34,4 @@ function Notifications() {
     </div>
   );
 }
-export default Notifications;
+export default notifications;

@@ -1,6 +1,5 @@
 // nextjs imports
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 // style imports
 import styles from "../styles/Pages/Signin.module.css";
@@ -15,18 +14,11 @@ import { useContext, useState } from "react";
 import Spinner from "../comps/utils/Spinner";
 
 // context imports
-import { NotificationContext } from "../comps/utils/FloatNotification";
+import { NotificationContext } from "../contexts/NotificationContext";
 
-function signin({ signedIn }) {
-  // get notification context
+function signin({ loading }) {
+  // using notification context
   const showNotification = useContext(NotificationContext);
-
-  // checking signed state
-  const router = useRouter();
-  if (signedIn) {
-    router.push(`/`);
-    return;
-  }
 
   // signing in state
   const [signingInState, setSigningInState] = useState({
@@ -69,7 +61,7 @@ function signin({ signedIn }) {
         </p>
       </div>
       <div className="d-flex flex-column align-items-center justify-content-center gap-3 w-50">
-        {signedIn === undefined ? (
+        {loading ? (
           <>
             <div
               className={`${styles.skeleton} py-4 pb-5 bg-secondary bg-opacity-50 rounded-1 w-75`}
@@ -88,7 +80,7 @@ function signin({ signedIn }) {
               disabled={signingInState.google}
             >
               {signingInState.google ? (
-                <Spinner />
+                <Spinner hiddenText={`Signing in`} customClasses={`my-2`} />
               ) : (
                 <>
                   <svg
@@ -148,7 +140,7 @@ function signin({ signedIn }) {
               disabled={signingInState.facebook}
             >
               {signingInState.facebook ? (
-                <Spinner />
+                <Spinner hiddenText={`Signing in`} customClasses={`my-2`} />
               ) : (
                 <>
                   <svg

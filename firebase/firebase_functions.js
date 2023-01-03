@@ -114,8 +114,10 @@ const createPost = async (content, setUploading) => {
       });
 
       setUploading(false);
+
+      return true;
     } catch (e) {
-      console.error(e);
+      return false;
     }
   }
 };

@@ -1,13 +1,28 @@
 // nextjs imports
 import Link from "next/link";
 
+// reactjs imports
+import { useContext } from "react";
+
 // styles imports
 import styles from "../../styles/comps/Routing.module.css";
 
 // firebase functions imports
 import { userSignOut } from "../../firebase/firebase_functions";
 
+// context imports
+import { AuthContext } from "../../contexts/AuthContext";
+
 function Routing() {
+  // using auth context
+  const authContext = useContext(AuthContext);
+
+  // getting info from authContext
+  const signedIn = typeof authContext === `object`;
+
+  // if user not signed-in
+  if (!signedIn) return;
+
   return (
     <div
       className={`position-fixed bottom-0 end-0 py-3 me-3 mb-5 bg-dark bg-opacity-50 border border-secondary border-opacity-75 rounded-pill d-flex flex-column-reverse justify-content-between align-items-center gap-3 overflow-hidden ${styles.wrapper}`}

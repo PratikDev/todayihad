@@ -1,12 +1,15 @@
 // reactjs imports
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 // comps imports
-import Spinner from "./Spinner";
 import NewPostImgUploadArea from "./utils_comp/NewPostImgUploadArea";
+import Spinner from "./Spinner";
 
 // firebase functions imports
 import { createPost } from "../../firebase/firebase_functions";
+
+// context imports
+import { NotificationContext } from "../../contexts/NotificationContext";
 
 // styles imports
 import styles from "../../styles/comps/utils/PreviewModal.module.css";
@@ -27,6 +30,9 @@ function PreviewModal({ photo, onClose }) {
     };
   }, []);
 
+  // get notification context
+  const showNotification = useContext(NotificationContext);
+
   // setting post uploading state
   const [uploading, setUploading] = useState(false);
 
@@ -35,16 +41,25 @@ function PreviewModal({ photo, onClose }) {
 
   // handle post
   function handlePost() {
-    if (textarea?.current) {
-      const {
-        current: { value },
-      } = textarea;
+    if (!textarea?.current) return;
 
-      if (value.trim()) {
-        const content = value.trim();
-        createPost(content, setUploading);
-      }
-    }
+    const {
+      current: { value },
+    } = textarea;
+
+    const content = value.trim();
+
+    if (!content) return;
+
+    const creatingPostCall = createPost(content, setUploading);
+    creatingPostCall.then((response) => {
+      if (!response)
+        showNotification({
+          title: `Oppss!!`,
+          message: `Something went wrong. Please try again`,
+          variant: `danger`,
+        });
+    });
   }
 
   // handle dp upload
@@ -137,16 +152,14 @@ function PreviewModal({ photo, onClose }) {
                     type="button"
                     disabled={uploading}
                     className={`btn btn-light ms-2 ${footerBtnStyles.modalBtn}`}
-                    onClick={(e) => uploading && handleSubmit(e)}
+                    onClick={(e) => !uploading && handleSubmit(e)}
                   >
                     {uploading ? (
-                      <div
-                        class="spinner-border spinner-border-sm"
-                        role="status"
-                        aria-hidden="true"
-                      >
-                        <span class="visually-hidden">Loading...</span>
-                      </div>
+                      <Spinner
+                        size={`sm`}
+                        hiddenText={`Uploading`}
+                        customClasses={`mx-2`}
+                      />
                     ) : (
                       `Post`
                     )}
