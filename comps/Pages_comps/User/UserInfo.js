@@ -4,13 +4,19 @@ import Link from "next/link";
 
 // reactjs imports
 import { useContext, useRef, useState } from "react";
-import { AuthContext } from "../../../contexts/AuthContext";
 
-// styles imports
-import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
+// contexts imports
+import { AuthContext } from "../../../contexts/AuthContext";
+import { NotificationContext } from "../../../contexts/NotificationContext";
+
+// helper functions imports
+import { validateImg } from "../../../helpers/validateImg";
 
 // comps imports
 import PreviewModal from "../../utils/PreviewModal";
+
+// styles imports
+import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
 
 function UserInfo({ offcanvas }) {
   // using auth context
@@ -18,31 +24,37 @@ function UserInfo({ offcanvas }) {
 
   // getting info based on auth context
   const loading = authContext === undefined;
-  const { displayName, email, photoURL } =
+  const { displayName, email, photoURL, uid } =
     authContext ||
     {}; /* use en empty object if authContext is undefined. can't destructure object keys from undefined */
+
+  // using notification context
+  const showNotification = useContext(NotificationContext);
 
   // image upload btn ref
   const img_upload = useRef();
 
   // image preview modal state and function
   const [showModal, setShowModal] = useState(false);
-  function showImgPreview({
-    target: {
-      files: [photo],
-    },
-  }) {
-    // if photo is defined
-    if (photo) {
-      // checking if image has acceptable extension
-      const { type } = photo;
-      const acceptableExt = ["png", "jpg", "jpeg"];
-      const containsItem = acceptableExt.some((item) => type.includes(item));
-      if (containsItem) {
-        const src = URL.createObjectURL(photo);
-        setShowModal(src);
-      }
+
+  // show image in modal
+  function showImgPreview(photo) {
+    // validating uploaded image
+    const { result, errorCode } = validateImg(photo);
+    if (!result) {
+      showNotification({
+        title: `Oppss!!`,
+        message:
+          errorCode === `img`
+            ? `Only JPG, JPEG or PNG images are allowed😟`
+            : `Max image size is 2MB😟`,
+        variant: `danger`,
+      });
+      return;
     }
+
+    const src = URL.createObjectURL(photo);
+    setShowModal(src);
   }
 
   // new post modal window
@@ -112,7 +124,10 @@ function UserInfo({ offcanvas }) {
                   aria-hidden
                   hidden
                   onChange={(event) => {
-                    showImgPreview(event);
+                    const photo = event.target.files[0];
+                    showImgPreview(photo);
+                    // reseting input field
+                    event.target.value = null;
                   }}
                 />
               </>
@@ -224,6 +239,8 @@ function UserInfo({ offcanvas }) {
       </div>
       {!loading && !!showModal && (
         <PreviewModal
+          autherName={displayName}
+          autherID={uid}
           onClose={hideModal}
           photo={typeof showModal === `string` ? showModal : undefined}
         />

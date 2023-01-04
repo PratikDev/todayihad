@@ -15,7 +15,7 @@ import { NotificationContext } from "../../contexts/NotificationContext";
 import styles from "../../styles/comps/utils/PreviewModal.module.css";
 import footerBtnStyles from "../../styles/comps/utils/utils_comp/FooterBtn.module.css";
 
-function PreviewModal({ photo, onClose }) {
+function PreviewModal({ photo, onClose, autherName, autherID }) {
   // function for esc key press
   function escFunc(event) {
     if (event.key === `Escape`) {
@@ -51,14 +51,22 @@ function PreviewModal({ photo, onClose }) {
 
     if (!content) return;
 
-    const creatingPostCall = createPost(content, setUploading);
+    const creatingPostCall = createPost({
+      autherName,
+      autherID,
+      content,
+      setUploading,
+    });
     creatingPostCall.then((response) => {
-      if (!response)
-        showNotification({
-          title: `Oppss!!`,
-          message: `Something went wrong. Please try again`,
-          variant: `danger`,
-        });
+      const notificationMessage = {
+        title: response ? `Hurrayy` : `Oppss!!`,
+        message: response
+          ? `Posted Successfully🥳🥳`
+          : `Something went wrong. Please try again😟`,
+        variant: response ? `success` : `danger`,
+      };
+
+      showNotification(notificationMessage);
     });
   }
 
@@ -139,7 +147,7 @@ function PreviewModal({ photo, onClose }) {
                   placeholder="Write what you had today..."
                   className={`${footerBtnStyles.textarea} bg-transparent rounded-1 flex-grow-1 p-3 mb-5`}
                 ></textarea>
-                <NewPostImgUploadArea />
+                <NewPostImgUploadArea showNotification={showNotification} />
                 <div className={`customModal-footer mt-3 text-end`}>
                   <button
                     type="button"

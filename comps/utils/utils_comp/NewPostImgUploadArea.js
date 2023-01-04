@@ -1,10 +1,13 @@
 // reactjs imports
 import { useRef, useState } from "react";
 
+// helper functions imports
+import { validateImg } from "../../../helpers/validateImg";
+
 // styles import
 import styles from "../../../styles/comps/utils/utils_comp/NewPostImgUploadArea.module.css";
 
-function NewPostImgUploadArea() {
+function NewPostImgUploadArea({ showNotification }) {
   // uploaded img state
   const [img, setImg] = useState(undefined);
 
@@ -12,19 +15,23 @@ function NewPostImgUploadArea() {
   const dropAreaRef = useRef(null);
 
   // show media
-  function showMedia(data) {
-    // data isn't available
-    if (!data) return;
-
-    // checking if image has acceptable extension
-    const { type } = data;
-    const acceptableExt = ["png", "jpg", "jpeg"];
-    const containsItem = acceptableExt.some((item) => type.includes(item));
-    // if image doesn't have acceptable extension
-    if (!containsItem) return;
+  function showMedia(photo) {
+    // validating uploaded image
+    const { result, errorCode } = validateImg(photo);
+    if (!result) {
+      showNotification({
+        title: `Oppss!!`,
+        message:
+          errorCode === `img`
+            ? `Only JPG, JPEG or PNG images are allowed😟`
+            : `Max image size is 2MB😟`,
+        variant: `danger`,
+      });
+      return;
+    }
 
     // setting img src in state
-    const src = URL.createObjectURL(data);
+    const src = URL.createObjectURL(photo);
     setImg(src);
   }
 
@@ -107,6 +114,7 @@ function NewPostImgUploadArea() {
             onChange={(e) => {
               const data = e.target.files[0];
               showMedia(data);
+              e.target.value = null;
             }}
             hidden
             aria-hidden
