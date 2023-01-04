@@ -8,6 +8,22 @@
   width: calc(100% - 1rem);
   max-width: 400px;
   height: fit-content;
+  font-size: 14.5px;
+  transform: translateY(150px);
+  animation-duration: 200ms;
+  animation-fill-mode: forwards;
+}
+
+.notification:not(.notification-reverse) {
+  animation-name: animation;
+}
+
+.notification-reverse {
+  animation-name: animation-reverse;
+}
+
+.message {
+  color: rgb(144, 146, 150);
 }
 
 .indicator {
@@ -15,31 +31,44 @@
   left: -4px;
 }
 
-.message {
-  font-size: 14.5px;
+.closeBtn {
+  padding: 0 0.2rem;
+}
+
+.closeBtn:hover {
+  background-color: #1a1a1a;
 }
 
 .closeBtnIcon {
   fill: rgba(255, 255, 255, 0.3);
 }
 
+@keyframes animation {
+  from {
+    transform: translateY(150px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes animation-reverse {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(150px);
+  }
+}
+
 @media screen and (max-width: 576px) {
-  .message {
+  .notification {
     font-size: 14px;
   }
 }
 
 @media screen and (max-width: 400px) {
-  .title {
-    font-size: 14px;
-  }
-
-  .message {
+  .notification {
     font-size: 13px;
-  }
-
-  .closeBtnIcon {
-    width: 20px;
-    height: 20px;
   }
 }

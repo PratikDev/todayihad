@@ -5,6 +5,17 @@
 .customModalDialogWrapper {
   max-width: 900px;
   max-height: 900px;
+  scale: 0;
+  animation-duration: 200ms;
+  animation-fill-mode: forwards;
+}
+
+.customModalDialogWrapper:not(.reverse) {
+  animation-name: modal-animation;
+}
+
+.reverse {
+  animation-name: modal-animation-reverse;
 }
 
 .customModalDialog {
@@ -13,6 +24,24 @@
 
 .modal_img {
   max-height: 600px;
+}
+
+@keyframes modal-animation {
+  from {
+    scale: 0;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+@keyframes modal-animation-reverse {
+  from {
+    scale: 1;
+  }
+  to {
+    scale: 0;
+  }
 }
 
 @media screen and (max-width: 480px) {
