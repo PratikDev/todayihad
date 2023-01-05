@@ -5,20 +5,25 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/globals.css";
 
 // context imports
-import NotificationContext from "../contexts/NotificationContext";
-import AuthContextComponent from "../contexts/AuthContext";
-import AuthChecker from "../comps/AuthChecker";
+import { default as NotifCtxComp } from "../contexts/NotificationContext";
+import { default as AuthCtxComp } from "../contexts/AuthContext";
+import { default as ModalCtxComp } from "../contexts/ModalContext";
+
+// utility functions imports
+import AuthChecker from "../utilities/AuthChecker";
 
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      <NotificationContext>
-        <AuthContextComponent>
-          <div className="vh-100 container">
-            <AuthChecker children={Component} childProps={pageProps} />
-          </div>
-        </AuthContextComponent>
-      </NotificationContext>
+      <NotifCtxComp>
+        <AuthCtxComp>
+          <ModalCtxComp>
+            <div className="vh-100 container">
+              <AuthChecker children={Component} childProps={pageProps} />
+            </div>
+          </ModalCtxComp>
+        </AuthCtxComp>
+      </NotifCtxComp>
     </>
   );
 }

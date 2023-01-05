@@ -17,14 +17,15 @@ function NewPostImgUploadArea({ showNotification }) {
   // show media
   function showMedia(photo) {
     // validating uploaded image
-    const { result, errorCode } = validateImg(photo);
-    if (!result) {
+    const { result: isValid, errorCode } = validateImg(photo);
+
+    if (!isValid) {
       showNotification({
         title: `Oppss!!`,
         message:
-          errorCode === `img`
-            ? `Only JPG, JPEG or PNG images are allowed😟`
-            : `Max image size is 2MB😟`,
+          errorCode === `size`
+            ? `Max image size is 2MB😟`
+            : `Only JPG, JPEG or PNG images are allowed😟`,
         variant: `danger`,
       });
       return;

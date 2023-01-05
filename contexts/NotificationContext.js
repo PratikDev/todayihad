@@ -34,6 +34,8 @@ function NotificationContextComponent({ children }) {
 
   // hide notification function
   function hideNotification() {
+    if (!notifRef.current) return;
+
     // adding animation class
     notifRef.current.classList.add(styles["notification-reverse"]);
 

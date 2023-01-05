@@ -10,11 +10,11 @@
   animation-fill-mode: forwards;
 }
 
-.customModalDialogWrapper:not(.reverse) {
+.customModalDialogWrapper:not(.modal-reverse) {
   animation-name: modal-animation;
 }
 
-.reverse {
+.modal-reverse {
   animation-name: modal-animation-reverse;
 }
 
@@ -23,7 +23,7 @@
 }
 
 .modal_img {
-  max-height: 600px;
+  max-height: 590px;
 }
 
 @keyframes modal-animation {

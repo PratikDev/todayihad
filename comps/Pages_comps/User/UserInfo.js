@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 // reactjs imports
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 
 // contexts imports
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -12,11 +12,9 @@ import { NotificationContext } from "../../../contexts/NotificationContext";
 // helper functions imports
 import { validateImg } from "../../../helpers/validateImg";
 
-// comps imports
-import PreviewModal from "../../utils/PreviewModal";
-
 // styles imports
 import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
+import { ModalContext } from "../../../contexts/ModalContext";
 
 function UserInfo({ offcanvas }) {
   // using auth context
@@ -24,51 +22,41 @@ function UserInfo({ offcanvas }) {
 
   // getting info based on auth context
   const loading = authContext === undefined;
-  const { displayName, email, photoURL, uid } =
+  const { displayName, email, photoURL } =
     authContext ||
     {}; /* use en empty object if authContext is undefined. can't destructure object keys from undefined */
 
   // using notification context
   const showNotification = useContext(NotificationContext);
 
+  // using modal context
+  const showModal = useContext(ModalContext);
+
   // image upload btn ref
   const img_upload = useRef();
 
-  // image preview modal state and function
-  const [showModal, setShowModal] = useState(false);
+  // function for handling selected img
+  function handleSelectedImg(event) {
+    const photo = event.target.files[0];
 
-  // show image in modal
-  function showImgPreview(photo) {
-    // validating uploaded image
-    const { result, errorCode } = validateImg(photo);
-    if (!result) {
+    // getting result of img validation
+    const { result: isValid, errorCode } = validateImg(photo);
+
+    if (!isValid) {
       showNotification({
         title: `Oppss!!`,
         message:
-          errorCode === `img`
-            ? `Only JPG, JPEG or PNG images are allowed😟`
-            : `Max image size is 2MB😟`,
+          errorCode === `size`
+            ? `Max image size is 2MB😟`
+            : `Only JPG, JPEG or PNG images are allowed😟`,
         variant: `danger`,
       });
       return;
     }
 
+    // creating url for img
     const src = URL.createObjectURL(photo);
-    setShowModal(src);
-  }
-
-  // new post modal window
-  function newPostModal() {
-    setShowModal(true);
-  }
-
-  // hide modal
-  function hideModal() {
-    setShowModal(false);
-
-    // reseting input value
-    const { current } = img_upload;
-    current.value = ``;
+    showModal(src);
   }
 
   return (
@@ -123,11 +111,11 @@ function UserInfo({ offcanvas }) {
                   id="profile-photo"
                   aria-hidden
                   hidden
-                  onChange={(event) => {
-                    const photo = event.target.files[0];
-                    showImgPreview(photo);
+                  onChange={(e) => {
+                    handleSelectedImg(e);
+
                     // reseting input field
-                    event.target.value = null;
+                    e.target.value = null;
                   }}
                 />
               </>
@@ -199,7 +187,9 @@ function UserInfo({ offcanvas }) {
               loading ? `${styles.skeleton} py-3` : ``
             }`}
             disabled={loading}
-            onClick={newPostModal}
+            onClick={() => {
+              !loading ? showModal() : null;
+            }}
           >
             {!loading ? (
               <>
@@ -237,14 +227,6 @@ function UserInfo({ offcanvas }) {
           )}
         </div>
       </div>
-      {!loading && !!showModal && (
-        <PreviewModal
-          autherName={displayName}
-          autherID={uid}
-          onClose={hideModal}
-          photo={typeof showModal === `string` ? showModal : undefined}
-        />
-      )}
     </>
   );
 }
