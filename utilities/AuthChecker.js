@@ -33,9 +33,11 @@ function AuthChecker({ children: Children, childProps }) {
     return;
   }
 
+  const { uid } = authContext || {};
+
   return (
     <>
-      <Children loading={loading} {...childProps} />
+      <Children loading={loading} autherID={uid} {...childProps} />
       <Routing />
     </>
   );

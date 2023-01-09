@@ -16,23 +16,36 @@ import { NotificationContext } from "./NotificationContext";
 import styles from "../styles/contexts/ModalContext.module.css";
 import footerBtnStyles from "../styles/comps/utils/utils_comp/FooterBtn.module.css";
 
+// dp img previewer ui
+const DpImgPreviewUI = ({ photo }) => (
+  <>
+    <div className={`d-flex flex-column justify-content-center flex-grow-1`}>
+      <img
+        src={photo ? URL.createObjectURL(photo) : null}
+        alt="modal"
+        className={`${styles.modal_img} objectFit-contain w-100`}
+      />
+    </div>
+  </>
+);
+
+// new post ui
+const NewPostUI = ({ setModal, textarea }) => (
+  <>
+    <textarea
+      ref={textarea}
+      name="caption"
+      id="caption"
+      placeholder="Write what you had today..."
+      className={`${footerBtnStyles.textarea} bg-transparent rounded-1 flex-grow-1 p-3 mb-5`}
+    ></textarea>
+    <NewPostImgUploadArea setModal={setModal} />
+  </>
+);
+
 export const ModalContext = createContext();
 
 function ModalContextComponent({ children }) {
-  // function for esc key press
-  function escFunc(event) {
-    if (event.key === `Escape`) {
-      closeModal();
-    }
-  }
-  useEffect(() => {
-    document.addEventListener(`keydown`, escFunc, true);
-
-    return () => {
-      document.removeEventListener(`keydown`, escFunc, true);
-    };
-  }, []);
-
   // using auth context
   const authContext = useContext(AuthContext);
 
@@ -49,13 +62,14 @@ function ModalContextComponent({ children }) {
   const [modal, setModal] = useState({
     show: false,
     photo: null,
+    newPost: false,
   });
 
   // uploading state
   const [uploading, setUploading] = useState(false);
 
   // destructuring state values
-  const { show, photo } = modal;
+  const { show, photo, newPost } = modal;
 
   // textarea ref
   const textarea = useRef();
@@ -64,7 +78,7 @@ function ModalContextComponent({ children }) {
   const modalWrapper = useRef();
 
   // handle post function
-  function handlePost() {
+  async function handlePost() {
     if (!textarea?.current) return;
 
     const {
@@ -82,26 +96,30 @@ function ModalContextComponent({ children }) {
       return;
     }
 
-    const creatingPostCall = createPost({
+    const creatingPostResp = await createPost({
       autherName: displayName,
       autherID: uid,
       content,
+      photo,
       setUploading,
     });
-    creatingPostCall.then((response) => {
-      const failurMessage = {
-        title: `Oppss!!`,
-        message: `Something went wrong. Please try again😟`,
-        variant: `danger`,
-      };
-      const successMessage = {
-        title: `Hurrayy`,
-        message: `Posted Successfully🥳🥳`,
-        variant: `success`,
-      };
 
-      showNotification(response ? successMessage : failurMessage);
-    });
+    const failurMessage = {
+      title: `Oppss!!`,
+      message: `Something went wrong. Please try again😟`,
+      variant: `danger`,
+    };
+    const successMessage = {
+      title: `Hurrayy`,
+      message: `Posted Successfully🥳🥳`,
+      variant: `success`,
+    };
+
+    showNotification(creatingPostResp ? successMessage : failurMessage);
+
+    if (!creatingPostResp) return;
+
+    closeModal();
   }
 
   // handle dp change function
@@ -110,9 +128,8 @@ function ModalContextComponent({ children }) {
   }
 
   // show modal function
-  function showModal(data) {
-    const src = data || null;
-    setModal({ show: true, photo: src });
+  function showModal({ data, newPost }) {
+    setModal({ show: true, photo: data, newPost });
   }
 
   // close modal function
@@ -122,41 +139,43 @@ function ModalContextComponent({ children }) {
     // adding animation class
     modalWrapper.current?.classList.add(styles["modal-reverse"]);
 
-    // changing state after 300ms
-    const timeout = setTimeout(() => {
-      setModal({ show: false, photo: null });
+    // changing state after 100ms
+    const timeout = setTimeout(function () {
+      setModal({ show: false, photo: null, newPost: false });
     }, 100);
 
-    // clearing timeout
     !show && clearTimeout(timeout);
   }
 
-  // dp img previewer ui
-  const DpImgPreviewUI = () => (
-    <>
-      <div className={`d-flex flex-column justify-content-center flex-grow-1`}>
-        <img
-          src={photo}
-          alt="modal"
-          className={`${styles.modal_img} objectFit-contain w-100`}
-        />
-      </div>
-    </>
-  );
+  // handle submit
+  function handleSubmit() {
+    // if uploading
+    if (uploading) return;
 
-  // new post ui
-  const NewPostUI = () => (
-    <>
-      <textarea
-        ref={textarea}
-        name="caption"
-        id="caption"
-        placeholder="Write what you had today..."
-        className={`${footerBtnStyles.textarea} bg-transparent rounded-1 flex-grow-1 p-3 mb-5`}
-      ></textarea>
-      <NewPostImgUploadArea showNotification={showNotification} />
-    </>
-  );
+    // if it's not for new post and have photo
+    if (!newPost && !!photo) {
+      handleDp();
+      return;
+    }
+
+    // if it's new post
+    if (newPost) handlePost();
+  }
+
+  // effect for esc key press
+  useEffect(() => {
+    function escFunc(event) {
+      if (event.key === `Escape`) {
+        closeModal();
+      }
+    }
+
+    document.addEventListener(`keydown`, escFunc, true);
+
+    return () => {
+      document.removeEventListener(`keydown`, escFunc, true);
+    };
+  }, [closeModal]);
 
   return (
     <>
@@ -182,7 +201,11 @@ function ModalContextComponent({ children }) {
                   className={`${styles.customModalDialog} h-100 w-100 p-4 rounded-1 overflow-auto`}
                 >
                   <div className="d-flex flex-column h-100">
-                    {photo ? <DpImgPreviewUI /> : <NewPostUI />}
+                    {newPost ? (
+                      <NewPostUI setModal={setModal} textarea={textarea} />
+                    ) : (
+                      <DpImgPreviewUI photo={photo} />
+                    )}
                     <div className={`customModal-footer mt-3 text-end`}>
                       <button
                         type="button"
@@ -195,24 +218,18 @@ function ModalContextComponent({ children }) {
                         type="button"
                         disabled={uploading}
                         className={`btn btn-light ms-2 ${footerBtnStyles.modalBtn}`}
-                        onClick={() =>
-                          !uploading
-                            ? photo
-                              ? handleDp()
-                              : handlePost()
-                            : null
-                        }
+                        onClick={handleSubmit}
                       >
                         {uploading ? (
                           <Spinner
                             size={`sm`}
-                            hiddenText={`Uploading`}
+                            hiddenText={`Uploading...`}
                             customClasses={`mx-2`}
                           />
-                        ) : photo ? (
-                          `Upload`
-                        ) : (
+                        ) : newPost ? (
                           `Post`
+                        ) : (
+                          `Upload`
                         )}
                       </button>
                     </div>

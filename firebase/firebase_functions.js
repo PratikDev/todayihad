@@ -1,3 +1,4 @@
+// firebase imports
 import { getAdditionalUserInfo, signInWithPopup, signOut } from "firebase/auth";
 import {
   addDoc,
@@ -6,7 +7,16 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-import { db, auth, provider_google, provider_facebook } from "./firebase_init";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+
+// firebase init imports
+import {
+  db,
+  auth,
+  storage,
+  provider_google,
+  provider_facebook,
+} from "./firebase_init";
 
 const providerSignIn = async (provider_name, handleSigningInState) => {
   let auth_provider;
@@ -110,25 +120,61 @@ const userSignOut = async () => {
   }
 };
 
-const createPost = async ({ content, setUploading, autherName, autherID }) => {
-  if (content && autherID && autherName) {
-    setUploading(true);
-    try {
-      // Add a new document in collection "posts"
-      const dataForDB = {
-        content,
-        autherName,
-        autherID,
-        creationTime: serverTimestamp(),
-      };
-      await addDoc(collection(db, "posts"), dataForDB);
+const createPost = async ({
+  content,
+  photo,
+  setUploading,
+  autherName,
+  autherID,
+}) => {
+  // if content, auther id or auther name isn't available
+  if (!content || !autherID || !autherName) return;
 
-      setUploading(false);
+  setUploading(true);
+  try {
+    let downloadURL = null;
+    // upload photo if photo is available
+    if (photo) {
+      const filePrevName = photo?.name;
+      const ext = filePrevName.split(".").pop();
+      const fileNameWithoutExt = filePrevName?.substring(
+        0,
+        filePrevName?.lastIndexOf(".")
+      );
+      const fileName = `${fileNameWithoutExt}-${new Date().getTime()}-${autherID}.${ext}`;
 
-      return true;
-    } catch (e) {
-      return false;
+      // creating fileName ref
+      const photoRef = ref(storage, `posts/${fileName}`);
+
+      try {
+        // upload photo in DB
+        await uploadBytes(photoRef, photo);
+
+        downloadURL = await getDownloadURL(photoRef);
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
     }
+
+    // encoded content
+    const encodedContent = Buffer.from(content).toString("base64");
+
+    // Add a new document in collection "posts"
+    const dataForDB = {
+      content: encodedContent,
+      media: downloadURL,
+      autherName,
+      autherID,
+      creationTime: serverTimestamp(),
+    };
+    await addDoc(collection(db, "posts"), dataForDB);
+
+    setUploading(false);
+
+    return true;
+  } catch (e) {
+    return false;
   }
 };
 

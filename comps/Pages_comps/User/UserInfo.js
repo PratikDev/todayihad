@@ -54,9 +54,8 @@ function UserInfo({ offcanvas }) {
       return;
     }
 
-    // creating url for img
-    const src = URL.createObjectURL(photo);
-    showModal(src);
+    // calling showModal func
+    showModal({ data: photo, newPost: false });
   }
 
   return (
@@ -188,7 +187,7 @@ function UserInfo({ offcanvas }) {
             }`}
             disabled={loading}
             onClick={() => {
-              !loading ? showModal() : null;
+              !loading ? showModal({ data: null, newPost: true }) : null;
             }}
           >
             {!loading ? (

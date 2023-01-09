@@ -1,5 +1,8 @@
 // reactjs imports
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
+
+// contexts imports
+import { NotificationContext } from "../../../contexts/NotificationContext";
 
 // helper functions imports
 import { validateImg } from "../../../helpers/validateImg";
@@ -7,9 +10,12 @@ import { validateImg } from "../../../helpers/validateImg";
 // styles import
 import styles from "../../../styles/comps/utils/utils_comp/NewPostImgUploadArea.module.css";
 
-function NewPostImgUploadArea({ showNotification }) {
+function NewPostImgUploadArea({ setModal }) {
+  // using notification context
+  const showNotification = useContext(NotificationContext);
+
   // uploaded img state
-  const [img, setImg] = useState(undefined);
+  const [img, setImg] = useState(false);
 
   // dropable area ref
   const dropAreaRef = useRef(null);
@@ -31,9 +37,14 @@ function NewPostImgUploadArea({ showNotification }) {
       return;
     }
 
-    // setting img src in state
+    // setting img src in state and also in parent component
     const src = URL.createObjectURL(photo);
     setImg(src);
+
+    // setting modal photo
+    setModal((prev) => {
+      return { ...prev, photo };
+    });
   }
 
   // handle media drop enter
@@ -65,6 +76,9 @@ function NewPostImgUploadArea({ showNotification }) {
   // handle cancel media
   function handleCancelMedia() {
     setImg(undefined);
+    setModal((prev) => {
+      return { ...prev, photo: null };
+    });
   }
 
   return (

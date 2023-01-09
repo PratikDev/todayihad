@@ -8,8 +8,26 @@ import { useEffect, useRef, useState } from "react";
 // style imports
 import styles from "../../styles/comps/Post.module.css";
 
-function Post({ count, separate }) {
-  const [caption_expand, setCaption_expand] = useState(separate || false);
+function Post({ data, count, separate }) {
+  // destructuring data values
+  const {
+    autherName,
+    autherID,
+    content: encodedContent,
+    creationTime,
+    media,
+  } = data || {};
+
+  // Decode content
+  const decodedContet = Buffer.from(encodedContent, "base64").toString("utf8");
+
+  // if content is tiny
+  const tinyContent =
+    decodedContet.length > 100 || decodedContet.split("\n").length > 5;
+
+  const [caption_expand, setCaption_expand] = useState(
+    !tinyContent || separate || false
+  );
 
   const CustomLink = !separate ? Link : "div";
 
@@ -27,10 +45,13 @@ function Post({ count, separate }) {
   const prior = count === 1;
 
   return (
-    <div className={`bg-secondary bg-opacity-25 rounded-1 p-4 mx-auto`}>
-      <div className="d-flex flex-column align-items-center justify-content-between gap-4 p-1">
+    <div className={`w-100 bg-secondary bg-opacity-25 rounded-1 p-4 mx-auto`}>
+      <div className="d-flex flex-column justify-content-between gap-4 p-1">
         <div className="d-flex align-items-center justify-content-between w-100">
-          <Link href="/user" className={`d-flex align-items-center gap-2`}>
+          <Link
+            href={`/user/${autherID}`}
+            className={`d-flex align-items-center gap-2`}
+          >
             <Image
               src="/preview_img.png"
               width={40}
@@ -40,9 +61,9 @@ function Post({ count, separate }) {
               className={`rounded-circle objectFit-contain bg-secondary`}
             />
             <div className="d-flex flex-column">
-              <small>user9898</small>
+              <small>{autherName}</small>
               <small className={`text-muted ${styles.post_creation_date}`}>
-                19 Aug, 1966
+                {`${creationTime}`}
               </small>
             </div>
           </Link>
@@ -81,53 +102,15 @@ function Post({ count, separate }) {
 
         <div className="d-flex flex-column align-items-center justify-content-center gap-4">
           <p
-            className={`text-wrap text-break m-0 position-relative${
-              !caption_expand ? ` cursor` : ""
+            className={`w-100 text-break m-0 position-relative ${
+              !caption_expand ? `cursor text-wrap` : ""
             } ${styles.post_caption}`}
             onClick={() => {
               setCaption_expand(true);
             }}
           >
-            <>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-              aperiam repellendus sed at eos. Modi ad illo, repellat debitis
-              tempora, temporibus ipsa quo laudantium commodi repudiandae
-              consectetur et quod voluptas. Nostrum vero ratione ab in nihil
-              voluptatibus quisquam dolorum laborum obcaecati, error, molestiae
-              possimus incidunt, illo sequi deleniti esse nulla! Ullam rem
-              ratione voluptatem dolorum dicta cumque possimus, et obcaecati!
-              Atque, doloribus. Eum, illum repellendus? Molestiae dolor odit,
-              sed, iste reiciendis dolorum rem consequatur quibusdam obcaecati
-              velit, earum molestias perferendis maxime beatae voluptatibus non
-              facilis illo voluptas. Atque, deleniti. Sapiente. Nihil cum
-              praesentium maxime excepturi expedita, omnis consequuntur numquam
-              quis nisi. Ducimus illo fugit consectetur, sequi optio officiis
-              ratione consequatur dicta voluptate eum nobis ab autem nulla.
-              Laborum, voluptatibus voluptates? Nesciunt atque sunt aliquam
-              dicta dignissimos non ipsum harum placeat, ratione assumenda
-              possimus aliquid illo totam illum esse minus accusantium
-              laboriosam distinctio perferendis eos pariatur quisquam quasi aut
-              voluptate? Rem! Minima mollitia debitis nisi repellat inventore
-              iure, non unde voluptatibus excepturi ut, fugiat voluptas rem id
-              reiciendis quam eaque architecto incidunt delectus porro aperiam.
-              Laboriosam reiciendis deleniti obcaecati odio quisquam.
-              Voluptatum, quas veritatis. Dolorem ipsam esse ducimus,
-              consequuntur optio perferendis cum quis ipsum soluta iure earum
-              voluptates laborum saepe aspernatur a labore illo assumenda sunt
-              et temporibus. Aut, tempora odio. Dolor, aperiam quae, esse
-              explicabo aliquam nesciunt earum doloremque quasi maiores non
-              nostrum architecto alias atque dolorum tenetur facilis doloribus
-              rerum. Nesciunt inventore quidem quaerat, beatae voluptas error
-              modi totam? Non unde distinctio vel officiis nesciunt nulla
-              voluptate ea quibusdam odit nemo, dolor, dignissimos consequuntur
-              quo, repellendus maxime voluptates quas? Fuga temporibus vero
-              facere sequi mollitia quae dolore suscipit? Id. Sapiente rem non
-              molestias, sint quisquam molestiae error odio quo reprehenderit
-              velit in, asperiores corrupti saepe suscipit. Iste minima
-              explicabo nihil quis recusandae consectetur quos, deserunt,
-              praesentium corrupti repudiandae deleniti.
-            </>
-            {caption_expand && !separate && (
+            <>{decodedContet}</>
+            {caption_expand && !separate && tinyContent && (
               <i
                 className="cursor fw-bold text px-2 text-muted"
                 ref={seeLessBtn}
@@ -150,7 +133,7 @@ function Post({ count, separate }) {
           >
             <Image
               alt="post media"
-              src={`/preview_img${count === 1 ? "" : count}.png`}
+              src={media}
               fill
               priority={prior}
               sizes="(max-width: 768px) 100vw,
