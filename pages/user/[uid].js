@@ -25,27 +25,43 @@ import UserInfo from "../../comps/Pages_comps/User/UserInfo";
 import OffCanvas from "../../comps/utils/OffCanvas";
 import PostSkeleton from "../../comps/utils/Post_Skeleton";
 
+// helper imports
+import { timeFormatter } from "../../helpers/timeFormatter";
+
 // styles imports
 import styles from "../../styles/pages/User.module.css";
 
-function User({ loading, data: { isUserAvailable, posts, errorCode } }) {
+function User({ loading, data }) {
+  // destructuring values from data
+  const { isUserAvailable, posts, errorCode } = data;
+
   // if there is error
   if (errorCode) console.error(errorCode);
 
   // if user isn't available
   if (!isUserAvailable) return <Error statusCode={404} />;
 
+  // parsing all posts
   let postArr = [];
   posts.forEach((post) => {
     postArr.push(JSON.parse(post));
   });
 
+  // destructuring values from posts
+  const [{ autherName, autherPhoto, autherEmail }] = postArr;
+
   const [offCanvasShow, setOffCanvasShow] = useState("");
+
   return (
     <div
       className={`d-flex justify-content-center gap-5 py-3 mx-auto ${styles.content}`}
     >
-      <UserInfo />
+      <UserInfo
+        loading={loading}
+        displayName={autherName}
+        photoURL={autherPhoto}
+        email={autherEmail}
+      />
 
       <div
         className={`${styles.post_list} d-flex flex-column align-items-center justify-content-center gap-3`}
@@ -74,7 +90,13 @@ function User({ loading, data: { isUserAvailable, posts, errorCode } }) {
       </button>
 
       <OffCanvas show={offCanvasShow} setShow={setOffCanvasShow}>
-        <UserInfo offcanvas />
+        <UserInfo
+          offcanvas
+          loading={loading}
+          displayName={autherName}
+          photoURL={autherPhoto}
+          email={autherEmail}
+        />
       </OffCanvas>
     </div>
   );
@@ -97,12 +119,17 @@ export async function getServerSideProps(context) {
 
   // try to get user data
   try {
+    let autherEmail = "";
+
     const user = await getDoc(usersRef);
 
     data.isUserAvailable = user.exists();
 
     // if user exit
     if (user.exists()) {
+      // setting auther email
+      autherEmail = user.data().email;
+
       // posts ref
       const postsRef = collection(db, "posts");
 
@@ -110,7 +137,7 @@ export async function getServerSideProps(context) {
       const postsQuObj = query(
         postsRef,
         where("autherID", "==", uid),
-        orderBy("creationTime"),
+        orderBy("creationTime", "desc"),
         limit(10)
       );
 
@@ -118,26 +145,24 @@ export async function getServerSideProps(context) {
       try {
         const postsList = await getDocs(postsQuObj);
 
-        // Intl time formatter
-        const formatter = new Intl.RelativeTimeFormat(`en`);
-
         postsList.forEach((post) => {
           // getting the data;
           const postData = post.data();
 
+          // getting post id
+          const postID = post.id;
+
+          // converting creation time to milliseconds
           const prevTime = postData.creationTime.toMillis();
 
-          const timeDiff = prevTime - new Date();
-
-          const newTime = formatter.format(
-            Math.ceil(timeDiff / (1000 * 60 * 60 * 24)),
-            "days"
-          );
+          // converting millis to human readable format
+          const newTime = timeFormatter(prevTime);
 
           // updating serverTimestamp object to date
           postData.creationTime = newTime;
 
-          data.posts.push(JSON.stringify(postData));
+          // pushing data back to posts array
+          data.posts.push(JSON.stringify({ ...postData, postID, autherEmail }));
         });
       } catch (error) {
         data.errorCode = JSON.stringify(error);

@@ -13,9 +13,11 @@ function Post({ data, count, separate }) {
   const {
     autherName,
     autherID,
+    autherPhoto,
     content: encodedContent,
     creationTime,
     media,
+    postID,
   } = data || {};
 
   // Decode content
@@ -42,7 +44,7 @@ function Post({ data, count, separate }) {
     }
   }, [caption_expand]);
 
-  const prior = count === 1;
+  const prior = count === 0;
 
   return (
     <div className={`w-100 bg-secondary bg-opacity-25 rounded-1 p-4 mx-auto`}>
@@ -53,11 +55,11 @@ function Post({ data, count, separate }) {
             className={`d-flex align-items-center gap-2`}
           >
             <Image
-              src="/preview_img.png"
+              src={autherPhoto || `/blank_user.jpg`}
               width={40}
               height={40}
               priority={prior}
-              alt="op dp"
+              alt={autherName}
               className={`rounded-circle objectFit-contain bg-secondary`}
             />
             <div className="d-flex flex-column">
@@ -76,7 +78,7 @@ function Post({ data, count, separate }) {
               viewBox="0 0 128 512"
               fill="rgba(255,255,255,0.75)"
               width={10}
-              height={25}
+              height={22}
               className={`p-2 px-3 box-sizing-content`}
               role="button"
             >
@@ -127,21 +129,23 @@ function Post({ data, count, separate }) {
             readOnly
             checked={caption_expand}
           />
-          <CustomLink
-            href={!separate ? `/post` : undefined}
-            className={`w-100 d-flex align-items-center justify-content-center position-relative`}
-          >
-            <Image
-              alt="post media"
-              src={media}
-              fill
-              priority={prior}
-              sizes="(max-width: 768px) 100vw,
+          {media && (
+            <CustomLink
+              href={!separate ? `/post/${postID}` : undefined}
+              className={`w-100 d-flex align-items-center justify-content-center position-relative`}
+            >
+              <Image
+                alt="post media"
+                src={media}
+                fill
+                priority={prior}
+                sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 50vw,
               33vw"
-              className={`objectFit-contain position-relative ${styles.post_media}`}
-            />
-          </CustomLink>
+                className={`objectFit-contain position-relative ${styles.post_media}`}
+              />
+            </CustomLink>
+          )}
         </div>
 
         <div
@@ -161,21 +165,22 @@ function Post({ data, count, separate }) {
             </svg>
             <sub className="ms-1">(21k)</sub>
           </button>
-          <button
-            className={`btn text-light text-opacity-50 w-25 ${styles.react_btn}`}
-          >
-            <svg
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="rgba(255,255,255,0.3)"
-              xmlns="http://www.w3.org/2000/svg"
+          <CustomLink href={`/post/${postID}`} className={`w-25`}>
+            <button
+              className={`btn text-light text-opacity-50 w-100 ${styles.react_btn}`}
             >
-              <path d="M25.9374 0.49585H2.9367C1.28038 0.49585 0.25 1.49366 0.25 3.17077V29.4958L5.93797 23.7852H25.9374C27.5953 23.7852 29.25 22.0626 29.25 20.3839V3.17077C29.2484 1.49366 27.5937 0.49585 25.9374 0.49585ZM17.9302 16.534H6.73564V13.3748H17.9302V16.534ZM22.7451 10.0336H6.73564V6.87439H22.7451V10.0336Z" />
-            </svg>
-
-            <sub className="ms-1">(21k)</sub>
-          </button>
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="rgba(255,255,255,0.3)"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M25.9374 0.49585H2.9367C1.28038 0.49585 0.25 1.49366 0.25 3.17077V29.4958L5.93797 23.7852H25.9374C27.5953 23.7852 29.25 22.0626 29.25 20.3839V3.17077C29.2484 1.49366 27.5937 0.49585 25.9374 0.49585ZM17.9302 16.534H6.73564V13.3748H17.9302V16.534ZM22.7451 10.0336H6.73564V6.87439H22.7451V10.0336Z" />
+              </svg>
+              <sub className="ms-1">(21k)</sub>
+            </button>
+          </CustomLink>
           <button
             className={`btn text-light text-opacity-50 w-25 ${styles.react_btn}`}
           >
@@ -196,4 +201,5 @@ function Post({ data, count, separate }) {
     </div>
   );
 }
+
 export default Post;

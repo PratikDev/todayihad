@@ -122,20 +122,21 @@ const userSignOut = async () => {
 
 const createPost = async ({
   content,
-  photo,
+  media,
   setUploading,
   autherName,
   autherID,
+  autherPhoto,
 }) => {
   // if content, auther id or auther name isn't available
-  if (!content || !autherID || !autherName) return;
+  if (!content || !autherID || !autherName || !autherPhoto) return;
 
   setUploading(true);
   try {
     let downloadURL = null;
     // upload photo if photo is available
-    if (photo) {
-      const filePrevName = photo?.name;
+    if (media) {
+      const filePrevName = media?.name;
       const ext = filePrevName.split(".").pop();
       const fileNameWithoutExt = filePrevName?.substring(
         0,
@@ -144,13 +145,13 @@ const createPost = async ({
       const fileName = `${fileNameWithoutExt}-${new Date().getTime()}-${autherID}.${ext}`;
 
       // creating fileName ref
-      const photoRef = ref(storage, `posts/${fileName}`);
+      const mediaRef = ref(storage, `posts/${fileName}`);
 
       try {
         // upload photo in DB
-        await uploadBytes(photoRef, photo);
+        await uploadBytes(mediaRef, media);
 
-        downloadURL = await getDownloadURL(photoRef);
+        downloadURL = await getDownloadURL(mediaRef);
       } catch (error) {
         console.error(error);
         return false;
@@ -166,6 +167,7 @@ const createPost = async ({
       media: downloadURL,
       autherName,
       autherID,
+      autherPhoto,
       creationTime: serverTimestamp(),
     };
     await addDoc(collection(db, "posts"), dataForDB);

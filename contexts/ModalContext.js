@@ -17,11 +17,11 @@ import styles from "../styles/contexts/ModalContext.module.css";
 import footerBtnStyles from "../styles/comps/utils/utils_comp/FooterBtn.module.css";
 
 // dp img previewer ui
-const DpImgPreviewUI = ({ photo }) => (
+const DpImgPreviewUI = ({ media }) => (
   <>
     <div className={`d-flex flex-column justify-content-center flex-grow-1`}>
       <img
-        src={photo ? URL.createObjectURL(photo) : null}
+        src={media ? URL.createObjectURL(media) : null}
         alt="modal"
         className={`${styles.modal_img} objectFit-contain w-100`}
       />
@@ -51,7 +51,7 @@ function ModalContextComponent({ children }) {
 
   // getting info based on auth context
   const loading = authContext === undefined;
-  const { displayName, uid } =
+  const { displayName, uid, photoURL } =
     authContext ||
     {}; /* use en empty object if authContext is undefined (can't destructure object keys from undefined) */
 
@@ -61,7 +61,7 @@ function ModalContextComponent({ children }) {
   // mounting state
   const [modal, setModal] = useState({
     show: false,
-    photo: null,
+    media: null,
     newPost: false,
   });
 
@@ -69,7 +69,7 @@ function ModalContextComponent({ children }) {
   const [uploading, setUploading] = useState(false);
 
   // destructuring state values
-  const { show, photo, newPost } = modal;
+  const { show, media, newPost } = modal;
 
   // textarea ref
   const textarea = useRef();
@@ -100,7 +100,8 @@ function ModalContextComponent({ children }) {
       autherName: displayName,
       autherID: uid,
       content,
-      photo,
+      media,
+      autherPhoto: photoURL,
       setUploading,
     });
 
@@ -124,12 +125,12 @@ function ModalContextComponent({ children }) {
 
   // handle dp change function
   function handleDp() {
-    console.log(photo);
+    console.log(media);
   }
 
   // show modal function
   function showModal({ data, newPost }) {
-    setModal({ show: true, photo: data, newPost });
+    setModal({ show: true, media: data, newPost });
   }
 
   // close modal function
@@ -141,7 +142,7 @@ function ModalContextComponent({ children }) {
 
     // changing state after 100ms
     const timeout = setTimeout(function () {
-      setModal({ show: false, photo: null, newPost: false });
+      setModal({ show: false, media: null, newPost: false });
     }, 100);
 
     !show && clearTimeout(timeout);
@@ -152,8 +153,8 @@ function ModalContextComponent({ children }) {
     // if uploading
     if (uploading) return;
 
-    // if it's not for new post and have photo
-    if (!newPost && !!photo) {
+    // if it's not for new post and have media
+    if (!newPost && !!media) {
       handleDp();
       return;
     }
@@ -204,7 +205,7 @@ function ModalContextComponent({ children }) {
                     {newPost ? (
                       <NewPostUI setModal={setModal} textarea={textarea} />
                     ) : (
-                      <DpImgPreviewUI photo={photo} />
+                      <DpImgPreviewUI media={media} />
                     )}
                     <div className={`customModal-footer mt-3 text-end`}>
                       <button

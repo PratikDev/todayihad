@@ -6,26 +6,16 @@ import Link from "next/link";
 import { useContext, useRef } from "react";
 
 // contexts imports
-import { AuthContext } from "../../../contexts/AuthContext";
 import { NotificationContext } from "../../../contexts/NotificationContext";
+import { ModalContext } from "../../../contexts/ModalContext";
 
 // helper functions imports
 import { validateImg } from "../../../helpers/validateImg";
 
 // styles imports
 import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
-import { ModalContext } from "../../../contexts/ModalContext";
 
-function UserInfo({ offcanvas }) {
-  // using auth context
-  const authContext = useContext(AuthContext);
-
-  // getting info based on auth context
-  const loading = authContext === undefined;
-  const { displayName, email, photoURL } =
-    authContext ||
-    {}; /* use en empty object if authContext is undefined. can't destructure object keys from undefined */
-
+function UserInfo({ offcanvas, loading, displayName, email, photoURL }) {
   // using notification context
   const showNotification = useContext(NotificationContext);
 
@@ -229,4 +219,5 @@ function UserInfo({ offcanvas }) {
     </>
   );
 }
+
 export default UserInfo;

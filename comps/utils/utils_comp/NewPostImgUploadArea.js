@@ -21,9 +21,9 @@ function NewPostImgUploadArea({ setModal }) {
   const dropAreaRef = useRef(null);
 
   // show media
-  function showMedia(photo) {
+  function showMedia(media) {
     // validating uploaded image
-    const { result: isValid, errorCode } = validateImg(photo);
+    const { result: isValid, errorCode } = validateImg(media);
 
     if (!isValid) {
       showNotification({
@@ -38,12 +38,12 @@ function NewPostImgUploadArea({ setModal }) {
     }
 
     // setting img src in state and also in parent component
-    const src = URL.createObjectURL(photo);
+    const src = URL.createObjectURL(media);
     setImg(src);
 
-    // setting modal photo
+    // setting modal media
     setModal((prev) => {
-      return { ...prev, photo };
+      return { ...prev, media };
     });
   }
 
@@ -77,7 +77,7 @@ function NewPostImgUploadArea({ setModal }) {
   function handleCancelMedia() {
     setImg(undefined);
     setModal((prev) => {
-      return { ...prev, photo: null };
+      return { ...prev, media: null };
     });
   }
 
@@ -101,7 +101,7 @@ function NewPostImgUploadArea({ setModal }) {
           </div>
           <img
             src={img}
-            alt="uploadable photo"
+            alt="uploadable media"
             className={`${styles.post_img_preview} rounded-1 w-100 h-100 objectFit-contain`}
           />
         </div>

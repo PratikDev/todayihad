@@ -2,22 +2,35 @@
   min-height: var(--routing-btn);
 }
 
-.wrapper {
+.routingBtnWrapper {
   height: calc(var(--routing-btn) + (1rem * 2));
   transition: height 200ms ease-in-out;
 }
 
-.wrapper:focus-within {
+.routingBtnWrapper:focus-within {
   height: calc((var(--routing-btn) * 5) + (1rem * 2) + (1rem * 5) + 60px);
 }
 
-.wrapper:focus-within > svg:first-child {
+.routingBtnWrapper:focus-within > svg:first-child {
   fill: rgba(255, 255, 255, 0.1);
   cursor: default;
 }
 
+.newPostBtn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 @media screen and (max-width: 480px) {
+  .wrapper {
+    margin-bottom: 0.75rem !important;
+    margin-right: 0.75rem !important;
+  }
   .route_btn {
     height: 15px;
+    padding: 0 0.25rem !important;
+  }
+  .newPostBtnIcon {
+    width: 30px;
+    height: 30px;
   }
 }

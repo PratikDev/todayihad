@@ -23,12 +23,15 @@ function AuthChecker({ children: Children, childProps }) {
   // getting children's name
   const name = Children.name;
 
+  // checking sigend in
+  const signedIn = typeof authContext === `object`;
+
   // checking signed state
   const router = useRouter();
   if (authContext === false && name !== `signin`) {
     router.push(`/signin`);
     return;
-  } else if (typeof authContext === `object` && name === `signin`) {
+  } else if (signedIn && name === `signin`) {
     router.push(`/`);
     return;
   }
@@ -38,7 +41,7 @@ function AuthChecker({ children: Children, childProps }) {
   return (
     <>
       <Children loading={loading} autherID={uid} {...childProps} />
-      <Routing />
+      {signedIn && <Routing />}
     </>
   );
 }
