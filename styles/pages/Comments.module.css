@@ -1,0 +1,10 @@
+.wrapper {
+  max-width: 800px;
+}
+
+@media screen and (max-width: 480px) {
+  .commentsArea {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}

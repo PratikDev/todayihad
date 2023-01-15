@@ -50,7 +50,32 @@
   display: block !important;
 }
 
+.interectionCount {
+  font-size: 11px;
+}
+
 @media screen and (max-width: 480px) {
+  .wrapper {
+    padding: 0.75rem !important;
+  }
+
+  .postContainer {
+    gap: 1rem !important;
+  }
+
+  .dpImg {
+    width: 35px;
+    height: 35px;
+  }
+
+  .autherName {
+    font-size: 11px;
+  }
+
+  .post_creation_date {
+    font-size: 9.5px;
+  }
+
   .post_caption {
     --font-size: 11px;
   }
@@ -60,8 +85,12 @@
   }
 
   .react_btn > svg {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .postInterBtn {
+    font-size: 9px;
   }
 
   .post_media {
@@ -74,8 +103,8 @@
     padding: 0.25rem !important;
   }
 
-  .react_btn_container {
-    padding: 0.25rem 0.5rem !important;
+  .interectionCount {
+    font-size: 9px;
   }
 
   .post_settings > svg {

@@ -4,9 +4,6 @@ import Image from "next/image";
 // style imports
 import styles from "../styles/Pages/Signin.module.css";
 
-// firebase function imports
-import { providerSignIn } from "../firebase/firebase_functions";
-
 // reactjs imports
 import { useContext, useState } from "react";
 
@@ -25,12 +22,15 @@ function signin({ loading }) {
     google: false,
     facebook: false,
   });
+
   const handleSigningInState = (prop, value) => {
     setSigningInState({ ...signingInState, [prop]: value });
   };
 
   // handle OAuth sign in
   const handleOAuth = async (provider) => {
+    const { providerSignIn } = await import("../firebase/firebase_functions");
+
     const { result, errorCode } = await providerSignIn(
       provider,
       handleSigningInState

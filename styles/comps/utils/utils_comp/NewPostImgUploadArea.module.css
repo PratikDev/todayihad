@@ -5,3 +5,9 @@
 .post_img_preview {
   max-height: 350px;
 }
+
+@media screen and (max-width: 480px) {
+  .dropArea {
+    font-size: 13px;
+  }
+}

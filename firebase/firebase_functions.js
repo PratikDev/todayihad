@@ -1,23 +1,3 @@
-// firebase imports
-import { getAdditionalUserInfo, signInWithPopup, signOut } from "firebase/auth";
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-
-// firebase init imports
-import {
-  db,
-  auth,
-  storage,
-  provider_google,
-  provider_facebook,
-} from "./firebase_init";
-
 const providerSignIn = async (provider_name, handleSigningInState) => {
   let auth_provider;
 
@@ -43,6 +23,7 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
   };
 
   try {
+    const { signInWithPopup } = await import(`firebase/auth`);
     const result = await signInWithPopup(auth, auth_provider);
 
     const {
@@ -61,31 +42,30 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
       email: provider_email,
     } = first_provider;
 
+    const { getAdditionalUserInfo } = await import(`firebase/auth`);
     const { isNewUser } = getAdditionalUserInfo(result);
 
     if (isNewUser) {
-      try {
-        // Add a new document in collection "users"
-        await setDoc(doc(db, "users", uid), {
-          displayName: displayName || provider_displayName,
-          photoURL: photoURL || provider_photoURL,
-          email: email || provider_email,
-          uid,
-        });
+      // Add a new document in collection "users"
+      const { setDoc, doc } = await import(`firebase/firestore`);
+      const { db } = await import(`./firebase_init`);
+      await setDoc(doc(db, "users", uid), {
+        displayName: displayName || provider_displayName,
+        photoURL: photoURL || provider_photoURL,
+        email: email || provider_email,
+        uid,
+      });
 
-        answer.result = {
-          isNewUser,
-          displayName,
-          photoURL,
-          uid,
-          email,
-          provider_displayName,
-          provider_email,
-          provider_photoURL,
-        };
-      } catch (e) {
-        answer.errorCode = e;
-      }
+      answer.result = {
+        isNewUser,
+        displayName,
+        photoURL,
+        uid,
+        email,
+        provider_displayName,
+        provider_email,
+        provider_photoURL,
+      };
     } else {
       answer.result = {
         isNewUser,
@@ -113,7 +93,10 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
 
 const userSignOut = async () => {
   try {
+    const { signOut } = await import(`firebase/auth`);
+
     await signOut(auth);
+
     return true;
   } catch (error) {
     return false;
@@ -144,24 +127,28 @@ const createPost = async ({
       );
       const fileName = `${fileNameWithoutExt}-${new Date().getTime()}-${autherID}.${ext}`;
 
+      const { uploadBytes, ref, getDownloadURL } = await import(
+        `firebase/storage`
+      );
+
       // creating fileName ref
       const mediaRef = ref(storage, `posts/${fileName}`);
 
-      try {
-        // upload photo in DB
-        await uploadBytes(mediaRef, media);
+      // upload photo in DB
+      await uploadBytes(mediaRef, media);
 
-        downloadURL = await getDownloadURL(mediaRef);
-      } catch (error) {
-        console.error(error);
-        return false;
-      }
+      // getting media download url
+      downloadURL = await getDownloadURL(mediaRef);
     }
 
     // encoded content
     const encodedContent = Buffer.from(content).toString("base64");
 
     // Add a new document in collection "posts"
+    const { addDoc, collection, serverTimestamp } = await import(
+      `firebase/firestore`
+    );
+    const { db } = await import(`./firebase_init`);
     const dataForDB = {
       content: encodedContent,
       media: downloadURL,
@@ -180,4 +167,46 @@ const createPost = async ({
   }
 };
 
-export { userSignOut, providerSignIn, createPost };
+const postComment = async ({
+  content,
+  commenterID,
+  commenterName,
+  commenterPhoto,
+  postID,
+  setUploading,
+}) => {
+  if (!content || !commenterID || !commenterName || !commenterPhoto || !postID)
+    return false;
+
+  setUploading(true);
+  try {
+    // encoded content
+    const encodedContent = Buffer.from(content).toString("base64");
+
+    const { collection, addDoc, serverTimestamp } = await import(
+      `firebase/firestore`
+    );
+    const { db } = await import(`./firebase_init`);
+
+    // comments subcollection ref for adding doc on the next line
+    const commentsRef = collection(db, "posts", postID, "comments");
+
+    const commentData = {
+      content: encodedContent,
+      creationTime: serverTimestamp(),
+      autherID: commenterID,
+      autherName: commenterName,
+      autherPhoto: commenterPhoto,
+    };
+    await addDoc(commentsRef, commentData);
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  } finally {
+    setUploading(false);
+  }
+};
+
+export { userSignOut, providerSignIn, createPost, postComment };

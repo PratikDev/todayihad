@@ -17,7 +17,7 @@ function NotificationContextComponent({ children }) {
   // mounting state
   const [show, setShow] = useState(false);
 
-  const { title, message, variant, unmountDuration } = show;
+  const { title, message, variant, unmountDuration } = show || {};
 
   // notification ref
   const notifRef = useRef();

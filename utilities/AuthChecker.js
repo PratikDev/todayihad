@@ -36,11 +36,17 @@ function AuthChecker({ children: Children, childProps }) {
     return;
   }
 
-  const { uid } = authContext || {};
+  const { uid, displayName, photoURL } = authContext || {};
 
   return (
     <>
-      <Children loading={loading} autherID={uid} {...childProps} />
+      <Children
+        loading={loading}
+        authenticatedID={uid}
+        authenticatedName={displayName}
+        authenticatedPhoto={photoURL}
+        {...childProps}
+      />
       {signedIn && <Routing />}
     </>
   );

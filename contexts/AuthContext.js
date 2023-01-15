@@ -26,4 +26,5 @@ function AuthContextComponent({ children }) {
     </>
   );
 }
+
 export default AuthContextComponent;

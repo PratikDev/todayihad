@@ -1,8 +1,43 @@
 .skeleton {
   animation: skeleton 2s ease-in-out infinite alternate;
 }
+
+.media {
+  height: 400px;
+}
+
 @keyframes skeleton {
   50% {
     opacity: 0.5;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .wrapper {
+    padding: 1rem !important;
+  }
+
+  .dp {
+    padding: 1.2rem !important;
+  }
+
+  .name {
+    padding-bottom: 0.25rem !important;
+  }
+
+  .time {
+    padding-bottom: 0 !important;
+  }
+
+  .media {
+    height: 250px;
+  }
+
+  .reactBtnWrapper {
+    padding: 0.25rem !important;
+  }
+
+  .reactBtn {
+    padding-bottom: 0.5rem !important;
   }
 }

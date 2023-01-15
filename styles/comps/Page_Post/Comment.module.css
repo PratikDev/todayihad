@@ -1,15 +1,23 @@
+.comment_time {
+  font-size: 11px;
+}
+
+.commenter_name {
+  font-size: 14px;
+}
+
 .comment_text {
   font-size: 14px;
 }
 
 @media screen and (max-width: 480px) {
   .commenter_dp {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
   }
 
   .commenter_name {
-    font-size: 13px;
+    font-size: 11px;
   }
 
   .comment_text {
@@ -17,6 +25,6 @@
   }
 
   .comment_time {
-    font-size: 11px;
+    font-size: 9.5px;
   }
 }

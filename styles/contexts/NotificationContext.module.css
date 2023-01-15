@@ -45,7 +45,7 @@
 
 @keyframes animation {
   from {
-    transform: translateY(150px);
+    transform: translateY(100%);
   }
   to {
     transform: translateY(0);
@@ -57,7 +57,7 @@
     transform: translateY(0);
   }
   to {
-    transform: translateY(150px);
+    transform: translateY(100%);
   }
 }
 

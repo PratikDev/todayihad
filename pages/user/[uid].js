@@ -1,24 +1,6 @@
 // reactjs imports
 import { useState } from "react";
 
-// nextjs imports
-import Error from "next/error";
-
-// firebase imports
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
-
-// firebase init imports
-import { db } from "../../firebase/firebase_init";
-
 // comps imports
 import Post from "../../comps/Pages_comps/Post";
 import UserInfo from "../../comps/Pages_comps/User/UserInfo";
@@ -39,7 +21,10 @@ function User({ loading, data }) {
   if (errorCode) console.error(errorCode);
 
   // if user isn't available
-  if (!isUserAvailable) return <Error statusCode={404} />;
+  if (!isUserAvailable) {
+    let Error = require("next/error").default;
+    return <Error statusCode={404} />;
+  }
 
   // parsing all posts
   let postArr = [];
@@ -114,6 +99,8 @@ export async function getServerSideProps(context) {
     errorCode: null,
   };
 
+  const { doc, getDoc } = await import(`firebase/firestore`);
+  const { db } = await import(`../../firebase/firebase_init`);
   // users ref
   const usersRef = doc(db, "users", uid);
 
@@ -130,6 +117,8 @@ export async function getServerSideProps(context) {
       // setting auther email
       autherEmail = user.data().email;
 
+      const { getDocs, collection, limit, orderBy, query, where } =
+        await import(`firebase/firestore`);
       // posts ref
       const postsRef = collection(db, "posts");
 
@@ -141,32 +130,28 @@ export async function getServerSideProps(context) {
         limit(10)
       );
 
-      // try to set posts data
-      try {
-        const postsList = await getDocs(postsQuObj);
+      // set posts data
+      const postsList = await getDocs(postsQuObj);
 
-        postsList.forEach((post) => {
-          // getting the data;
-          const postData = post.data();
+      postsList.forEach((post) => {
+        // getting the data;
+        const postData = post.data();
 
-          // getting post id
-          const postID = post.id;
+        // getting post id
+        const postID = post.id;
 
-          // converting creation time to milliseconds
-          const prevTime = postData.creationTime.toMillis();
+        // converting creation time to milliseconds
+        const prevTime = postData.creationTime.toMillis();
 
-          // converting millis to human readable format
-          const newTime = timeFormatter(prevTime);
+        // converting millis to human readable format
+        const newTime = timeFormatter(prevTime);
 
-          // updating serverTimestamp object to date
-          postData.creationTime = newTime;
+        // updating serverTimestamp object to date
+        postData.creationTime = newTime;
 
-          // pushing data back to posts array
-          data.posts.push(JSON.stringify({ ...postData, postID, autherEmail }));
-        });
-      } catch (error) {
-        data.errorCode = JSON.stringify(error);
-      }
+        // pushing data back to posts array
+        data.posts.push(JSON.stringify({ ...postData, postID, autherEmail }));
+      });
     }
   } catch (error) {
     data.errorCode = JSON.stringify(error);
