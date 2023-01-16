@@ -10,7 +10,7 @@ import { AuthContext } from "../contexts/AuthContext";
 // comps imports
 import Routing from "../comps/Pages_comps/Routing";
 
-function AuthChecker({ children: Children, childProps }) {
+export default function AuthChecker({ children: Children, childProps }) {
   // checking if given children is valid react component
   if (!isValidElement(<Children />)) return;
 
@@ -51,4 +51,3 @@ function AuthChecker({ children: Children, childProps }) {
     </>
   );
 }
-export default AuthChecker;

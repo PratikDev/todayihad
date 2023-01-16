@@ -13,9 +13,16 @@ import { timeFormatter } from "../../helpers/timeFormatter";
 // styles imports
 import styles from "../../styles/pages/User.module.css";
 
-function User({ loading, data }) {
+export default function User({ loading, data }) {
   // destructuring values from data
-  const { isUserAvailable, posts, errorCode } = data;
+  const {
+    isUserAvailable,
+    posts,
+    autherEmail,
+    autherName,
+    autherPhoto,
+    errorCode,
+  } = JSON.parse(data);
 
   // if there is error
   if (errorCode) console.error(errorCode);
@@ -25,15 +32,6 @@ function User({ loading, data }) {
     let Error = require("next/error").default;
     return <Error statusCode={404} />;
   }
-
-  // parsing all posts
-  let postArr = [];
-  posts.forEach((post) => {
-    postArr.push(JSON.parse(post));
-  });
-
-  // destructuring values from posts
-  const [{ autherName, autherPhoto, autherEmail }] = postArr;
 
   const [offCanvasShow, setOffCanvasShow] = useState("");
 
@@ -53,7 +51,7 @@ function User({ loading, data }) {
       >
         {loading
           ? [1, 2, 3, 4].map((x) => <PostSkeleton key={x} />)
-          : postArr.map((value, index) => (
+          : posts.map((value, index) => (
               <Post key={index} data={value} count={index} />
             ))}
       </div>
@@ -96,6 +94,9 @@ export async function getServerSideProps(context) {
   let data = {
     isUserAvailable: false,
     posts: [],
+    autherEmail: undefined,
+    autherName: undefined,
+    autherPhoto: null,
     errorCode: null,
   };
 
@@ -106,16 +107,17 @@ export async function getServerSideProps(context) {
 
   // try to get user data
   try {
-    let autherEmail = "";
-
     const user = await getDoc(usersRef);
 
     data.isUserAvailable = user.exists();
 
     // if user exit
     if (user.exists()) {
-      // setting auther email
-      autherEmail = user.data().email;
+      // setting auther data
+      const { email, displayName, photoURL } = user.data();
+      data.autherEmail = email;
+      data.autherName = displayName;
+      data.autherPhoto = photoURL;
 
       const { getDocs, collection, limit, orderBy, query, where } =
         await import(`firebase/firestore`);
@@ -150,16 +152,14 @@ export async function getServerSideProps(context) {
         postData.creationTime = newTime;
 
         // pushing data back to posts array
-        data.posts.push(JSON.stringify({ ...postData, postID, autherEmail }));
+        data.posts.push({ ...postData, postID });
       });
     }
   } catch (error) {
-    data.errorCode = JSON.stringify(error);
+    data.errorCode = error;
   }
 
   return {
-    props: { data },
+    props: { data: JSON.stringify(data) },
   };
 }
-
-export default User;

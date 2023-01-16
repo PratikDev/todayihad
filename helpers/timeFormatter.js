@@ -6,9 +6,9 @@ export function timeFormatter(epochTimestamp) {
   const oneMonth = oneDay * 30;
 
   if (difference < oneHour) {
-    return `${Math.round(difference / (60 * 1000))} minutes ago`;
+    return `${Math.round(difference / (60 * 1000))} mins ago`;
   } else if (difference < oneDay) {
-    return `${Math.round(difference / oneHour)} hours ago`;
+    return `${Math.round(difference / oneHour)} hrs ago`;
   } else if (difference < oneMonth) {
     return `${Math.round(difference / oneDay)} days ago`;
   } else {

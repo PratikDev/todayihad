@@ -19,7 +19,9 @@ function Comment({
 
   return (
     <>
-      <div className="d-flex gap-3 w-100 align-items-start mt-2">
+      <div
+        className={`d-flex gap-1 w-100 align-items-start py-4 ${styles.commentDiv}`}
+      >
         <Link href={`../user/${autherID}`}>
           <Image
             src={autherPhoto}
@@ -29,7 +31,8 @@ function Comment({
             className={`bg-secondary bg-opacity-50 rounded-circle border border-secondary objectFit-contain ${styles.commenter_dp}`}
           />
         </Link>
-        <div className="d-flex flex-column gap-1">
+
+        <div className="d-flex flex-column flex-grow-1 gap-1 bg-secondary bg-opacity-25 p-3 rounded-1">
           <div className="d-flex flex-column">
             <small className={`text-muted ${styles.comment_time}`}>
               {creationTime}
@@ -42,7 +45,7 @@ function Comment({
             </Link>
           </div>
 
-          <p className={`mt-2 ${styles.comment_text}`}>{decodedContet}</p>
+          <p className={`m-0 mt-2 ${styles.comment_text}`}>{decodedContet}</p>
         </div>
       </div>
     </>

@@ -6,7 +6,7 @@ import styles from "../styles/contexts/NotificationContext.module.css";
 
 export const NotificationContext = createContext(() => {});
 
-function NotificationContextComponent({ children }) {
+export default function NotificationContextComponent({ children }) {
   // TODO: remove it before building production
   const tempState = {
     title: `title`,
@@ -110,4 +110,3 @@ function NotificationContextComponent({ children }) {
     </>
   );
 }
-export default NotificationContextComponent;

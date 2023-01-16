@@ -13,7 +13,7 @@ import Spinner from "../comps/utils/Spinner";
 // context imports
 import { NotificationContext } from "../contexts/NotificationContext";
 
-function signin({ loading }) {
+export default function signin({ loading }) {
   // using notification context
   const showNotification = useContext(NotificationContext);
 
@@ -177,4 +177,3 @@ function signin({ loading }) {
     </div>
   );
 }
-export default signin;

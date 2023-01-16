@@ -26,6 +26,16 @@ export default function CommentForm({ data }) {
 
     if (!current || !current.value) return;
 
+    if (current.value.trim().length > 2000) {
+      showNotification({
+        title: `Opps!!`,
+        message: `Max length for comment is 2000😖`,
+        variant: `danger`,
+      });
+
+      return;
+    }
+
     const { postComment } = await import(
       "../../../firebase/firebase_functions"
     );
@@ -47,7 +57,14 @@ export default function CommentForm({ data }) {
     });
 
     if (uploadResult) {
-      setComments((prev) => [...prev, 5]);
+      const newComment = {
+        autherID: authenticatedID,
+        autherName: authenticatedName,
+        autherPhoto: authenticatedPhoto,
+        content: Buffer.from(current.value).toString("base64"),
+        creationTime: `0 mins ago`,
+      };
+      setComments((prev) => [newComment, ...prev]);
     } else {
       showNotification({
         title: `Opps!!`,
@@ -62,7 +79,6 @@ export default function CommentForm({ data }) {
   return (
     <>
       <form
-        className={`border-bottom border-1 border-secondary border-opacity-25`}
         onSubmit={(e) => {
           e.preventDefault();
           if (!uploading) handleSubmit(e);

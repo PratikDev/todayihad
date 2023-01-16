@@ -51,33 +51,15 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
       const { db } = await import(`./firebase_init`);
       await setDoc(doc(db, "users", uid), {
         displayName: displayName || provider_displayName,
-        photoURL: photoURL || provider_photoURL,
+        photoURL: `https://robohash.org/set_set2/${
+          displayName || provider_displayName
+        }?size=150x150`,
         email: email || provider_email,
         uid,
       });
-
-      answer.result = {
-        isNewUser,
-        displayName,
-        photoURL,
-        uid,
-        email,
-        provider_displayName,
-        provider_email,
-        provider_photoURL,
-      };
-    } else {
-      answer.result = {
-        isNewUser,
-        displayName,
-        photoURL,
-        uid,
-        email,
-        provider_displayName,
-        provider_email,
-        provider_photoURL,
-      };
     }
+
+    answer.result = true;
 
     return answer;
   } catch (error) {

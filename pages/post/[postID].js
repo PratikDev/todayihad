@@ -13,8 +13,10 @@ export default function post_page({
   authenticatedID,
   authenticatedName,
   authenticatedPhoto,
-  data: { errorCode, post, commentsList, postID },
+  data,
 }) {
+  const { errorCode, post, commentsList, postID } = JSON.parse(data);
+
   // if there is error
   if (errorCode) console.error(errorCode);
 
@@ -24,13 +26,10 @@ export default function post_page({
     return <Error statusCode={404} />;
   }
 
-  // parsing post content
-  const parsedPost = JSON.parse(post);
-
   // parsing all posts
   let commentsArr = [];
   commentsList.forEach((comment) => {
-    commentsArr.push(JSON.parse(comment));
+    commentsArr.push(comment);
   });
 
   // comments list
@@ -38,9 +37,10 @@ export default function post_page({
 
   return (
     <div className={`mx-auto py-3 ${styles.wrapper}`}>
-      <Post count={1} separate data={parsedPost} />
+      <Post count={1} separate data={post} />
+
       <div
-        className={`bg-secondary bg-opacity-25 p-4 pt-2 rounded-bottom ${styles.commentsArea}`}
+        className={`bg-secondary bg-opacity-25 px-4 py-2 rounded-bottom ${styles.commentsArea}`}
         id="commentsection"
       >
         <CommentForm
@@ -53,11 +53,17 @@ export default function post_page({
           }}
         />
 
-        <div className="pt-4 pb-2 d-flex flex-column-reverse">
-          {comments.map((value, index) => (
-            <Comment key={index} data={value} />
-          ))}
-        </div>
+        {comments.length ? (
+          <>
+            <div className="d-flex flex-column">
+              {comments.map((value, index) => (
+                <Comment key={index} data={value} />
+              ))}
+            </div>
+          </>
+        ) : (
+          ``
+        )}
       </div>
     </div>
   );
@@ -85,9 +91,15 @@ export async function getServerSideProps(context) {
     const post = await getDoc(postRef);
 
     if (post.exists()) {
-      const { collection } = await import(`firebase/firestore`);
+      const { collection, query, orderBy, limit } = await import(
+        `firebase/firestore`
+      );
       // comments ref
-      const commentsRef = collection(db, "posts", postID, "comments");
+      const commentsRef = query(
+        collection(db, "posts", postID, "comments"),
+        orderBy("creationTime", "desc"),
+        limit(10)
+      );
 
       const { getDocs } = await import(`firebase/firestore`);
       // get comments
@@ -110,7 +122,7 @@ export async function getServerSideProps(context) {
           commentData.creationTime = newTime;
 
           // pushing data back to posts array
-          data.commentsList.push(JSON.stringify({ ...commentData }));
+          data.commentsList.push({ ...commentData });
         });
       }
 
@@ -127,13 +139,13 @@ export async function getServerSideProps(context) {
       postData.creationTime = newTime;
 
       // setting post data in data object
-      data.post = JSON.stringify({ ...postData });
+      data.post = { ...postData };
     }
   } catch (error) {
-    data.errorCode = JSON.stringify(error);
+    data.errorCode = error;
   }
 
   return {
-    props: { data },
+    props: { data: JSON.stringify(data) },
   };
 }

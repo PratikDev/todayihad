@@ -9,7 +9,7 @@
   max-width: 400px;
   height: fit-content;
   font-size: 14.5px;
-  transform: translateY(150px);
+  transform: translateY(150%);
   animation-duration: 200ms;
   animation-fill-mode: forwards;
 }
@@ -45,7 +45,7 @@
 
 @keyframes animation {
   from {
-    transform: translateY(100%);
+    transform: translateY(150%);
   }
   to {
     transform: translateY(0);
@@ -57,7 +57,7 @@
     transform: translateY(0);
   }
   to {
-    transform: translateY(100%);
+    transform: translateY(150%);
   }
 }
 
