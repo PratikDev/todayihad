@@ -1,8 +1,5 @@
-// firebase imports
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
-
-// firebase init imports
-import { db } from "../firebase/firebase_init";
+// reactjs imports
+import { useEffect } from "react";
 
 // comps imports
 import Post from "../comps/Pages_comps/Post";
@@ -14,14 +11,23 @@ import { timeFormatter } from "../helpers/timeFormatter";
 // styles imports
 import styles from "../styles/Pages/Home.module.css";
 
-export default function Home({ loading, data: { errorCode, posts } }) {
-  // if there is error
-  if (errorCode) console.error(errorCode);
+export default function Home({ loading, data }) {
+  const { errorCode, posts } = JSON.parse(data);
 
-  // parsing all posts
-  let postArr = [];
-  posts.forEach((post) => {
-    postArr.push(JSON.parse(post));
+  // if there is error
+  if (errorCode) {
+    console.error(errorCode);
+    return;
+  }
+
+  useEffect(() => {
+    if (window) {
+      const scrollPosition = sessionStorage.getItem("homePageScrollPosition");
+      if (scrollPosition) {
+        window.scrollTo(0, scrollPosition);
+        sessionStorage.removeItem("homePageScrollPosition");
+      }
+    }
   });
 
   return (
@@ -31,7 +37,7 @@ export default function Home({ loading, data: { errorCode, posts } }) {
       >
         {loading
           ? [1, 2, 3, 4].map((x) => <PostSkeleton key={x} />)
-          : postArr.map((value, index) => (
+          : posts.map((value, index) => (
               <Post key={index} count={index} data={value} />
             ))}
       </div>
@@ -45,6 +51,10 @@ export async function getServerSideProps() {
     posts: [],
   };
 
+  const { collection, getDocs, orderBy, limit, query } = await import(
+    `firebase/firestore`
+  );
+  const { db } = await import(`../firebase/firebase_init`);
   // posts ref
   const postsRef = collection(db, "posts");
 
@@ -75,13 +85,13 @@ export async function getServerSideProps() {
       // updating serverTimestamp object to date
       postData.creationTime = newTime;
 
-      data.posts.push(JSON.stringify({ ...postData, postID }));
+      data.posts.push({ ...postData, postID });
     });
   } catch (error) {
-    data.errorCode = JSON.stringify(error);
+    data.errorCode = error;
   }
 
   return {
-    props: { data },
+    props: { data: JSON.stringify(data) },
   };
 }

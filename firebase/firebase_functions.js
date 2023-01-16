@@ -25,9 +25,17 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
   };
 
   try {
-    const { signInWithPopup } = await import(`firebase/auth`);
+    const { signInWithPopup, updateProfile } = await import(`firebase/auth`);
     const { auth } = await import(`./firebase_init`);
+
     const result = await signInWithPopup(auth, auth_provider);
+
+    // update photoURL when sign-in is complete
+    await updateProfile(result.user, {
+      photoURL: `https://robohash.org/set_set2/${result.user.email}?size=150x150`,
+    });
+    // and reload
+    result.user.reload();
 
     const {
       user: {
@@ -54,9 +62,7 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
       const { db } = await import(`./firebase_init`);
       await setDoc(doc(db, "users", uid), {
         displayName: displayName || provider_displayName,
-        photoURL: `https://robohash.org/set_set2/${
-          email || provider_email
-        }?size=150x150`,
+        photoURL,
         email: email || provider_email,
         uid,
       });
@@ -116,6 +122,7 @@ const createPost = async ({
       const { uploadBytes, ref, getDownloadURL } = await import(
         `firebase/storage`
       );
+      const { storage } = await import(`./firebase_init`);
 
       // creating fileName ref
       const mediaRef = ref(storage, `posts/${fileName}`);
@@ -145,11 +152,12 @@ const createPost = async ({
     };
     await addDoc(collection(db, "posts"), dataForDB);
 
-    setUploading(false);
-
     return true;
   } catch (e) {
+    console.log(e);
     return false;
+  } finally {
+    setUploading(false);
   }
 };
 

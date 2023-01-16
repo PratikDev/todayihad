@@ -5,7 +5,7 @@ import Link from "next/link";
 // style imports
 import styles from "../../../styles/comps/Page_Post/Comment.module.css";
 
-function Comment({
+export default function Comment({
   data: {
     autherID,
     autherName,
@@ -22,7 +22,7 @@ function Comment({
       <div
         className={`d-flex gap-1 w-100 align-items-start py-4 ${styles.commentDiv}`}
       >
-        <Link href={`../user/${autherID}`}>
+        <Link href={`/user/${autherID}`}>
           <Image
             src={autherPhoto}
             alt={autherName}
@@ -51,4 +51,3 @@ function Comment({
     </>
   );
 }
-export default Comment;

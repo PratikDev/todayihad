@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 // style imports
 import styles from "../../styles/comps/Post.module.css";
 
-function Post({ data, count, separate }) {
+export default function Post({ data, count, separate }) {
   // destructuring data values
   const {
     autherName,
@@ -44,7 +44,11 @@ function Post({ data, count, separate }) {
     }
   }, [caption_expand]);
 
-  const prior = count === 0;
+  const prior = count === 0 || separate;
+
+  function handleCommentClick() {
+    sessionStorage.setItem("homePageScrollPosition", window.scrollY);
+  }
 
   return (
     <div
@@ -155,23 +159,26 @@ function Post({ data, count, separate }) {
         <div
           className={`d-flex align-items-center justify-content-between p-1 w-100 bg-secondary bg-opacity-25 rounded-1 ${styles.react_btn_container}`}
         >
-          <button
-            className={`btn rounded-1 text-light text-opacity-50 w-25 ${styles.react_btn}`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 512 512"
-              fill="rgba(255,255,255,0.3)"
-              width={25}
-              height={25}
+          <div className="w-25">
+            <button
+              className={`btn rounded-1 text-light text-opacity-50 w-100 ${styles.react_btn}`}
             >
-              <path d="M257.5 27.6c-.8-5.4-4.9-9.8-10.3-10.6c-22.1-3.1-44.6 .9-64.4 11.4l-74 39.5C89.1 78.4 73.2 94.9 63.4 115L26.7 190.6c-9.8 20.1-13 42.9-9.1 64.9l14.5 82.8c3.9 22.1 14.6 42.3 30.7 57.9l60.3 58.4c16.1 15.6 36.6 25.6 58.7 28.7l83 11.7c22.1 3.1 44.6-.9 64.4-11.4l74-39.5c19.7-10.5 35.6-27 45.4-47.2l36.7-75.5c9.8-20.1 13-42.9 9.1-64.9c-.9-5.3-5.3-9.3-10.6-10.1c-51.5-8.2-92.8-47.1-104.5-97.4c-1.8-7.6-8-13.4-15.7-14.6c-54.6-8.7-97.7-52-106.2-106.8zM208 208c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32zm0 128c0 17.7-14.3 32-32 32s-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32zm160 0c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z" />
-            </svg>
-            <sub className={`ms-1 ${styles.interectionCount}`}>(21k)</sub>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+                fill="rgba(255,255,255,0.3)"
+                width={25}
+                height={25}
+              >
+                <path d="M257.5 27.6c-.8-5.4-4.9-9.8-10.3-10.6c-22.1-3.1-44.6 .9-64.4 11.4l-74 39.5C89.1 78.4 73.2 94.9 63.4 115L26.7 190.6c-9.8 20.1-13 42.9-9.1 64.9l14.5 82.8c3.9 22.1 14.6 42.3 30.7 57.9l60.3 58.4c16.1 15.6 36.6 25.6 58.7 28.7l83 11.7c22.1 3.1 44.6-.9 64.4-11.4l74-39.5c19.7-10.5 35.6-27 45.4-47.2l36.7-75.5c9.8-20.1 13-42.9 9.1-64.9c-.9-5.3-5.3-9.3-10.6-10.1c-51.5-8.2-92.8-47.1-104.5-97.4c-1.8-7.6-8-13.4-15.7-14.6c-54.6-8.7-97.7-52-106.2-106.8zM208 208c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32zm0 128c0 17.7-14.3 32-32 32s-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32zm160 0c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z" />
+              </svg>
+              <sub className={`ms-1 ${styles.interectionCount}`}>(21k)</sub>
+            </button>
+          </div>
           <CustomLink
-            href={`/post/${postID}#commentsection`}
+            href={!separate ? `/post/${postID}#commentsection` : null}
             className={`w-25`}
+            onClick={!separate ? handleCommentClick : null}
           >
             <button
               className={`btn rounded-1 text-light text-opacity-50 w-100 ${styles.react_btn}`}
@@ -188,25 +195,25 @@ function Post({ data, count, separate }) {
               <sub className={`ms-1 ${styles.interectionCount}`}>(21k)</sub>
             </button>
           </CustomLink>
-          <button
-            className={`btn rounded-1 text-light text-opacity-50 w-25 ${styles.react_btn}`}
-          >
-            <svg
-              width="25"
-              height="25"
-              viewBox="0 0 27 28"
-              fill="rgba(255,255,255,0.3)"
-              xmlns="http://www.w3.org/2000/svg"
+          <div className="w-25">
+            <button
+              className={`btn rounded-1 text-light text-opacity-50 w-100 ${styles.react_btn}`}
             >
-              <path d="M13.1406 2.37683L0.989583 16.0468C-0.3125 17.5116 -0.3125 19.8846 0.989583 21.3495L5.15625 26.037C5.78125 26.7401 6.63021 27.1327 7.51562 27.1327H13H13.4896H24.6667C25.5885 27.1327 26.3333 26.2948 26.3333 25.2577C26.3333 24.2206 25.5885 23.3827 24.6667 23.3827H18.2031L25.0104 15.7303C26.3125 14.2655 26.3125 11.8925 25.0104 10.4276L17.8594 2.37683C16.5573 0.911987 14.4479 0.911987 13.1458 2.37683H13.1406ZM13.4896 23.3885H13H7.51042L3.34375 18.701L9.83854 11.3944L16.9948 19.4452L13.4896 23.3885Z" />
-            </svg>
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 27 28"
+                fill="rgba(255,255,255,0.3)"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M13.1406 2.37683L0.989583 16.0468C-0.3125 17.5116 -0.3125 19.8846 0.989583 21.3495L5.15625 26.037C5.78125 26.7401 6.63021 27.1327 7.51562 27.1327H13H13.4896H24.6667C25.5885 27.1327 26.3333 26.2948 26.3333 25.2577C26.3333 24.2206 25.5885 23.3827 24.6667 23.3827H18.2031L25.0104 15.7303C26.3125 14.2655 26.3125 11.8925 25.0104 10.4276L17.8594 2.37683C16.5573 0.911987 14.4479 0.911987 13.1458 2.37683H13.1406ZM13.4896 23.3885H13H7.51042L3.34375 18.701L9.83854 11.3944L16.9948 19.4452L13.4896 23.3885Z" />
+              </svg>
 
-            <sub className={`ms-1 ${styles.interectionCount}`}>(21k)</sub>
-          </button>
+              <sub className={`ms-1 ${styles.interectionCount}`}>(21k)</sub>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default Post;
