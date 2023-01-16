@@ -4,28 +4,41 @@ import Link from "next/link";
 // reactjs imports
 import { useContext } from "react";
 
-// firebase functions imports
-import { userSignOut } from "../../firebase/firebase_functions";
-
 // context imports
 import { AuthContext } from "../../contexts/AuthContext";
 import { ModalContext } from "../../contexts/ModalContext";
+import { NotificationContext } from "../../contexts/NotificationContext";
 
 // styles imports
 import styles from "../../styles/comps/Routing.module.css";
 
-function Routing() {
+export default function Routing() {
   // using auth context
   const authContext = useContext(AuthContext);
 
   // getting info from authContext
   const signedIn = typeof authContext === `object`;
 
+  // if user not signed-in
+  if (!signedIn) return;
+
   // using modal context
   const showModal = useContext(ModalContext);
 
-  // if user not signed-in
-  if (!signedIn) return;
+  // using notification context
+  const showNotification = useContext(NotificationContext);
+
+  async function handleSignOut() {
+    const { userSignOut } = await import(`../../firebase/firebase_functions`);
+    const result = await userSignOut();
+
+    if (!result)
+      showNotification({
+        title: `Oppss!!`,
+        message: `Something went wrong. Please try again😟`,
+        variant: `danger`,
+      });
+  }
 
   return (
     <>
@@ -47,7 +60,7 @@ function Routing() {
             <path d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z" />
           </svg>
 
-          <div className="cursor" onClick={userSignOut} title={`Logout`}>
+          <div className="cursor" onClick={handleSignOut} title={`Logout`}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
@@ -117,6 +130,7 @@ function Routing() {
             </svg>
           </Link>
         </div>
+
         <button
           className={`btn rounded-circle p-0 ${styles.newPostBtn}`}
           onClick={() => showModal({ data: null, newPost: true })}
@@ -137,4 +151,3 @@ function Routing() {
     </>
   );
 }
-export default Routing;

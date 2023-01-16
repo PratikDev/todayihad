@@ -35,10 +35,11 @@ export default function signin({ loading }) {
       provider,
       handleSigningInState
     );
+
     if (!result) {
       showNotification({
         title: `Oppss!!`,
-        message: errorCode,
+        message: `${errorCode}😟`,
         variant: `danger`,
       });
     }
@@ -60,6 +61,7 @@ export default function signin({ loading }) {
           Post what you had today
         </p>
       </div>
+
       <div className="d-flex flex-column align-items-center justify-content-center gap-3 w-50">
         {loading ? (
           <>
@@ -77,7 +79,7 @@ export default function signin({ loading }) {
               onClick={async () => {
                 handleOAuth(`google`);
               }}
-              disabled={signingInState.google}
+              disabled={signingInState.google || signingInState.facebook}
             >
               {signingInState.google ? (
                 <Spinner hiddenText={`Signing in`} customClasses={`my-2`} />
@@ -137,7 +139,7 @@ export default function signin({ loading }) {
               onClick={async () => {
                 handleOAuth(`facebook`);
               }}
-              disabled={signingInState.facebook}
+              disabled={signingInState.google || signingInState.facebook}
             >
               {signingInState.facebook ? (
                 <Spinner hiddenText={`Signing in`} customClasses={`my-2`} />

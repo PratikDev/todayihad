@@ -1,3 +1,6 @@
+// nextjs imports
+import Image from "next/image";
+
 // reactjs imports
 import { useState } from "react";
 
@@ -6,9 +9,6 @@ import Post from "../../comps/Pages_comps/Post";
 import UserInfo from "../../comps/Pages_comps/User/UserInfo";
 import OffCanvas from "../../comps/utils/OffCanvas";
 import PostSkeleton from "../../comps/utils/Post_Skeleton";
-
-// helper imports
-import { timeFormatter } from "../../helpers/timeFormatter";
 
 // styles imports
 import styles from "../../styles/pages/User.module.css";
@@ -21,6 +21,7 @@ export default function User({ loading, data }) {
     autherEmail,
     autherName,
     autherPhoto,
+    autherID,
     errorCode,
   } = JSON.parse(data);
 
@@ -29,7 +30,7 @@ export default function User({ loading, data }) {
 
   // if user isn't available
   if (!isUserAvailable) {
-    let Error = require("next/error").default;
+    const Error = require("next/error").default;
     return <Error statusCode={404} />;
   }
 
@@ -40,21 +41,42 @@ export default function User({ loading, data }) {
       className={`d-flex justify-content-center gap-5 py-3 mx-auto ${styles.content}`}
     >
       <UserInfo
-        loading={loading}
         displayName={autherName}
         photoURL={autherPhoto}
         email={autherEmail}
+        uid={autherID}
       />
 
       <div
         className={`${styles.post_list} d-flex flex-column align-items-center justify-content-center gap-3`}
       >
-        {loading
-          ? [1, 2, 3, 4].map((x) => <PostSkeleton key={x} />)
-          : posts.map((value, index) => (
-              <Post key={index} data={value} count={index} />
-            ))}
+        {loading ? (
+          [1, 2, 3, 4].map((x) => <PostSkeleton key={x} />)
+        ) : posts.length ? (
+          posts.map((value, index) => (
+            <Post key={index} data={value} count={index} />
+          ))
+        ) : (
+          <>
+            <div className="d-flex flex-column align-items-center">
+              <Image
+                priority={1}
+                src={`/empty.png`}
+                width={500}
+                height={500}
+                className={`${styles.empty}`}
+                alt={`No hard feelings, but we think ${autherName} is a boring person`}
+              />
+              <small className="m-0 mt-2 text-center text-muted">
+                No hard feelings,
+                <br />
+                but we think {autherName} is a boring person
+              </small>
+            </div>
+          </>
+        )}
       </div>
+
       <button
         className={`btn position-fixed bottom-0 start-0 bg-white p-0 pt-3 pe-3 rounded-0 d-lg-none d-block ${styles.menu_btn}`}
         onClick={() => {
@@ -75,10 +97,10 @@ export default function User({ loading, data }) {
       <OffCanvas show={offCanvasShow} setShow={setOffCanvasShow}>
         <UserInfo
           offcanvas
-          loading={loading}
           displayName={autherName}
           photoURL={autherPhoto}
           email={autherEmail}
+          uid={autherID}
         />
       </OffCanvas>
     </div>
@@ -97,6 +119,7 @@ export async function getServerSideProps(context) {
     autherEmail: undefined,
     autherName: undefined,
     autherPhoto: null,
+    autherID: undefined,
     errorCode: null,
   };
 
@@ -114,10 +137,11 @@ export async function getServerSideProps(context) {
     // if user exit
     if (user.exists()) {
       // setting auther data
-      const { email, displayName, photoURL } = user.data();
+      const { email, displayName, photoURL, uid } = user.data();
       data.autherEmail = email;
       data.autherName = displayName;
       data.autherPhoto = photoURL;
+      data.autherID = uid;
 
       const { getDocs, collection, limit, orderBy, query, where } =
         await import(`firebase/firestore`);
@@ -135,6 +159,7 @@ export async function getServerSideProps(context) {
       // set posts data
       const postsList = await getDocs(postsQuObj);
 
+      const { timeFormatter } = await import(`../../helpers/timeFormatter`);
       postsList.forEach((post) => {
         // getting the data;
         const postData = post.data();

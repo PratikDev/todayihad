@@ -9,7 +9,7 @@ import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
-function AuthContextComponent({ children }) {
+export default function AuthContextComponent({ children }) {
   const [signedIn, setSignedIn] = useState();
 
   onAuthStateChanged(auth, (user) => {
@@ -26,5 +26,3 @@ function AuthContextComponent({ children }) {
     </>
   );
 }
-
-export default AuthContextComponent;

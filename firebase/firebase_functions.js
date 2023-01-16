@@ -3,10 +3,12 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
 
   switch (provider_name) {
     case "google":
+      const { provider_google } = await import(`./firebase_init`);
       auth_provider = provider_google;
       break;
 
     case "facebook":
+      const { provider_facebook } = await import(`./firebase_init`);
       auth_provider = provider_facebook;
       break;
 
@@ -24,6 +26,7 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
 
   try {
     const { signInWithPopup } = await import(`firebase/auth`);
+    const { auth } = await import(`./firebase_init`);
     const result = await signInWithPopup(auth, auth_provider);
 
     const {
@@ -52,7 +55,7 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
       await setDoc(doc(db, "users", uid), {
         displayName: displayName || provider_displayName,
         photoURL: `https://robohash.org/set_set2/${
-          displayName || provider_displayName
+          email || provider_email
         }?size=150x150`,
         email: email || provider_email,
         uid,
@@ -76,6 +79,7 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
 const userSignOut = async () => {
   try {
     const { signOut } = await import(`firebase/auth`);
+    const { auth } = await import(`./firebase_init`);
 
     await signOut(auth);
 

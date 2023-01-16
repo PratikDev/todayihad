@@ -8,6 +8,7 @@ import { useContext, useRef } from "react";
 // contexts imports
 import { NotificationContext } from "../../../contexts/NotificationContext";
 import { ModalContext } from "../../../contexts/ModalContext";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 // helper functions imports
 import { validateImg } from "../../../helpers/validateImg";
@@ -15,12 +16,25 @@ import { validateImg } from "../../../helpers/validateImg";
 // styles imports
 import styles from "../../../styles/comps/Page_User/UserInfo.module.css";
 
-function UserInfo({ offcanvas, loading, displayName, email, photoURL }) {
+export default function UserInfo({
+  offcanvas,
+  displayName,
+  email,
+  photoURL,
+  uid: autherID,
+}) {
   // using notification context
   const showNotification = useContext(NotificationContext);
 
   // using modal context
   const showModal = useContext(ModalContext);
+
+  // using auth context
+  const authContext = useContext(AuthContext);
+  const loading = authContext === undefined;
+  const { uid } = authContext || {};
+
+  const isOwner = uid === autherID;
 
   // image upload btn ref
   const img_upload = useRef();
@@ -171,34 +185,38 @@ function UserInfo({ offcanvas, loading, displayName, email, photoURL }) {
             </div>
           </div>
 
-          <button
-            className={`btn bg-secondary bg-opacity-75 rounded-1 text-light d-flex align-items-center justify-content-center gap-2 w-100 border-0 ${
-              loading ? `${styles.skeleton} py-3` : ``
-            }`}
-            disabled={loading}
-            onClick={() => {
-              !loading ? showModal({ data: null, newPost: true }) : null;
-            }}
-          >
-            {!loading ? (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                  fill="rgba(255,255,255,0.75)"
-                  width={18}
-                  height={18}
-                >
-                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                </svg>
-                <span className={`${styles.ltr_space_2}`}>Post Your TiH</span>
-              </>
-            ) : (
-              ``
-            )}
-          </button>
+          {isOwner ? (
+            <button
+              className={`btn bg-secondary bg-opacity-75 rounded-1 text-light d-flex align-items-center justify-content-center gap-2 w-100 border-0 ${
+                loading ? `${styles.skeleton} py-3` : ``
+              }`}
+              disabled={loading}
+              onClick={() => {
+                !loading ? showModal({ data: null, newPost: true }) : null;
+              }}
+            >
+              {!loading ? (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                    fill="rgba(255,255,255,0.75)"
+                    width={18}
+                    height={18}
+                  >
+                    <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                  </svg>
+                  <span className={`${styles.ltr_space_2}`}>Post Your TiH</span>
+                </>
+              ) : (
+                ``
+              )}
+            </button>
+          ) : (
+            ``
+          )}
 
-          {!loading ? (
+          {!loading && isOwner ? (
             <Link href="/settings" className={`position-absolute top-0 end-0 `}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -219,5 +237,3 @@ function UserInfo({ offcanvas, loading, displayName, email, photoURL }) {
     </>
   );
 }
-
-export default UserInfo;

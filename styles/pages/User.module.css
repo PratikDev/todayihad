@@ -1,3 +1,9 @@
+.empty {
+  opacity: 0.5;
+  aspect-ratio: 1/1;
+  object-fit: contain;
+}
+
 .post_list {
   flex-grow: 5;
 }
@@ -8,4 +14,10 @@
 
 .menu_btn {
   border-top-right-radius: 40px !important;
+}
+
+@media screen and (max-width: 510px) {
+  .empty {
+    width: 100%;
+  }
 }

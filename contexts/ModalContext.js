@@ -45,7 +45,7 @@ const NewPostUI = ({ setModal, textarea }) => (
 
 export const ModalContext = createContext();
 
-function ModalContextComponent({ children }) {
+export default function ModalContextComponent({ children }) {
   // using auth context
   const authContext = useContext(AuthContext);
 
@@ -245,5 +245,3 @@ function ModalContextComponent({ children }) {
     </>
   );
 }
-
-export default ModalContextComponent;

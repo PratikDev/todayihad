@@ -26,14 +26,8 @@ export default function post_page({
     return <Error statusCode={404} />;
   }
 
-  // parsing all posts
-  let commentsArr = [];
-  commentsList.forEach((comment) => {
-    commentsArr.push(comment);
-  });
-
   // comments list
-  const [comments, setComments] = useState(commentsArr);
+  const [comments, setComments] = useState(commentsList);
 
   return (
     <div className={`mx-auto py-3 ${styles.wrapper}`}>
