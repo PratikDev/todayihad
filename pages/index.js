@@ -55,6 +55,7 @@ export async function getServerSideProps() {
     `firebase/firestore`
   );
   const { db } = await import(`../firebase/firebase_init`);
+
   // posts ref
   const postsRef = collection(db, "posts");
 

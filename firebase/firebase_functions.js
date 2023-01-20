@@ -1,4 +1,6 @@
 const providerSignIn = async (provider_name, handleSigningInState) => {
+  if (!provider_name || !handleSigningInState) return false;
+
   let auth_provider;
 
   switch (provider_name) {
@@ -47,11 +49,8 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
       },
     } = result;
 
-    const {
-      displayName: provider_displayName,
-      photoURL: provider_photoURL,
-      email: provider_email,
-    } = first_provider;
+    const { displayName: provider_displayName, email: provider_email } =
+      first_provider;
 
     const { getAdditionalUserInfo } = await import(`firebase/auth`);
     const { isNewUser } = getAdditionalUserInfo(result);
@@ -104,7 +103,7 @@ const createPost = async ({
   autherPhoto,
 }) => {
   // if content, auther id or auther name isn't available
-  if (!content || !autherID || !autherName || !autherPhoto) return;
+  if (!content || !autherID || !autherName || !autherPhoto) return false;
 
   setUploading(true);
   try {
@@ -142,19 +141,23 @@ const createPost = async ({
       `firebase/firestore`
     );
     const { db } = await import(`./firebase_init`);
+
+    const postsRef = collection(db, "posts");
     const dataForDB = {
       content: encodedContent,
       media: downloadURL,
       autherName,
       autherID,
       autherPhoto,
+      cookies: 0,
+      comments: 0,
+      trashRequest: 0,
       creationTime: serverTimestamp(),
     };
-    await addDoc(collection(db, "posts"), dataForDB);
+    await addDoc(postsRef, dataForDB);
 
     return true;
   } catch (e) {
-    console.log(e);
     return false;
   } finally {
     setUploading(false);
@@ -177,13 +180,18 @@ const postComment = async ({
     // encoded content
     const encodedContent = Buffer.from(content).toString("base64");
 
-    const { collection, addDoc, serverTimestamp } = await import(
-      `firebase/firestore`
-    );
+    const { collection, doc, serverTimestamp, writeBatch, increment } =
+      await import(`firebase/firestore`);
     const { db } = await import(`./firebase_init`);
 
-    // comments subcollection ref for adding doc on the next line
+    // comments subcollection ref for adding doc
     const commentsRef = collection(db, "posts", postID, "comments");
+
+    const commentDocRef = doc(commentsRef);
+
+    const batch = writeBatch(db);
+
+    const postDocRef = doc(db, "posts", postID);
 
     const commentData = {
       content: encodedContent,
@@ -192,15 +200,102 @@ const postComment = async ({
       autherName: commenterName,
       autherPhoto: commenterPhoto,
     };
-    await addDoc(commentsRef, commentData);
+
+    // add comments and increment comments count in batch
+    batch.set(commentDocRef, commentData);
+    batch.update(postDocRef, {
+      comments: increment(1),
+    });
+
+    // commit batch
+    await batch.commit();
 
     return true;
   } catch (error) {
-    console.log(error);
     return false;
   } finally {
     setUploading(false);
   }
 };
 
-export { userSignOut, providerSignIn, createPost, postComment };
+const sendCookie = async ({ postID, cookieSender }) => {
+  if (!postID || !cookieSender) return false;
+
+  try {
+    const { getDoc, writeBatch, increment, doc, query } = await import(
+      `firebase/firestore`
+    );
+    const { db } = await import(`./firebase_init`);
+
+    // likers subcollection ref for adding doc on the next line
+    const likersDocRef = doc(db, "posts", postID, "likers", "likerArray");
+
+    const likersDocSnapShot = await getDoc(likersDocRef);
+
+    // post ref
+    const postRef = doc(db, "posts", postID);
+
+    const batch = writeBatch(db);
+
+    // if likersArray doc does not exist. means the doc should be created, data should be inputed and increment cookie count
+    if (!likersDocSnapShot.exists()) {
+      // adding cookieSender id in likers array and increasing liker count in batch
+      batch.set(likersDocRef, { likers: [cookieSender] });
+      batch.update(postRef, {
+        cookies: increment(1),
+      });
+
+      // commit batch
+      await batch.commit();
+
+      return 1;
+    }
+
+    const { where, collection, getDocs } = await import(`firebase/firestore`);
+
+    const likersArrayQueryRef = query(
+      collection(db, "posts", postID, "likers"),
+      where("likers", "array-contains", cookieSender)
+    );
+
+    const likerArrayDocQuerySnapShot = await getDocs(likersArrayQueryRef);
+
+    // if cookie sender does not exist in likersArray. means cookie sender should be added in the array and increment cookie count
+    if (likerArrayDocQuerySnapShot.empty) {
+      const { arrayUnion } = await import(`firebase/firestore`);
+
+      // update likers array and increment cookie count in batch
+      batch.update(likersDocRef, {
+        likers: arrayUnion(cookieSender),
+      });
+      batch.update(postRef, {
+        cookies: increment(1),
+      });
+
+      // commit batch
+      await batch.commit();
+
+      return 1;
+    }
+
+    // if cookie sender does exist in likersArray. means cookie sender should be removed from the array and decrement cookie count
+    const { arrayRemove } = await import(`firebase/firestore`);
+
+    // remove cookie sender from likers array and decrement cookie count in batch
+    batch.update(likersDocRef, {
+      likers: arrayRemove(cookieSender),
+    });
+    batch.update(postRef, {
+      cookies: increment(-1),
+    });
+
+    // commit batch
+    await batch.commit();
+
+    return -1;
+  } catch (error) {
+    return false;
+  }
+};
+
+export { userSignOut, providerSignIn, createPost, postComment, sendCookie };
