@@ -9,16 +9,14 @@ import CommentForm from "../../comps/Pages_comps/Post/CommentForm";
 // styles imports
 import styles from "../../styles/pages/Comments.module.css";
 
-export default function post_page({
-  authenticatedID,
-  authenticatedName,
-  authenticatedPhoto,
-  data,
-}) {
+export default function post_page({ data }) {
   const { errorCode, post, commentsList, postID } = JSON.parse(data);
 
   // if there is error
-  if (errorCode) console.error(errorCode);
+  if (errorCode) {
+    console.error(errorCode);
+    return;
+  }
 
   // if post isn't available
   if (!post) {
@@ -39,9 +37,6 @@ export default function post_page({
       >
         <CommentForm
           data={{
-            authenticatedID,
-            authenticatedName,
-            authenticatedPhoto,
             postID,
             setComments,
           }}

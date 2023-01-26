@@ -51,9 +51,6 @@ export default function ModalContextComponent({ children }) {
 
   // getting info based on auth context
   const loading = authContext === undefined;
-  const { displayName, uid, photoURL } =
-    authContext ||
-    {}; /* use en empty object if authContext is undefined (can't destructure object keys from undefined) */
 
   // using notification context
   const showNotification = useContext(NotificationContext);
@@ -97,11 +94,8 @@ export default function ModalContextComponent({ children }) {
     }
 
     const creatingPostResp = await createPost({
-      autherName: displayName,
-      autherID: uid,
       content,
       media,
-      autherPhoto: photoURL,
       setUploading,
     });
 

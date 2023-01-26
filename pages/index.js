@@ -51,9 +51,8 @@ export async function getServerSideProps() {
     posts: [],
   };
 
-  const { collection, getDocs, orderBy, limit, query } = await import(
-    `firebase/firestore`
-  );
+  const { collection, getDocs, doc, getDoc, orderBy, limit, query } =
+    await import(`firebase/firestore`);
   const { db } = await import(`../firebase/firebase_init`);
 
   // posts ref
@@ -70,12 +69,36 @@ export async function getServerSideProps() {
   try {
     const postsList = await getDocs(postsQuObj);
 
-    postsList.forEach((post) => {
+    for (const post of postsList.docs) {
       // getting the data;
       const postData = post.data();
 
       // getting post id
       const postID = post.id;
+
+      // getting likers array
+      const likersArrayDocRef = doc(
+        db,
+        "posts",
+        postID,
+        "likers",
+        "likersArray"
+      );
+      const likersArrayDocSnapShot = await getDoc(likersArrayDocRef);
+      let likersArray = likersArrayDocSnapShot.data().likers;
+
+      // getting trashRequest array
+      const trashRequestArrayDocRef = doc(
+        db,
+        "posts",
+        postID,
+        "trashRequest",
+        "trashRequestArray"
+      );
+      const trashRequestArrayDocSnapShot = await getDoc(
+        trashRequestArrayDocRef
+      );
+      let trashRequestArray = trashRequestArrayDocSnapShot.data().trashRequest;
 
       // converting creation time to milliseconds
       const prevTime = postData.creationTime.toMillis();
@@ -86,8 +109,8 @@ export async function getServerSideProps() {
       // updating serverTimestamp object to date
       postData.creationTime = newTime;
 
-      data.posts.push({ ...postData, postID });
-    });
+      data.posts.push({ ...postData, postID, likersArray, trashRequestArray });
+    }
   } catch (error) {
     data.errorCode = error;
   }

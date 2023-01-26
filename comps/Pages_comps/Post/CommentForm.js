@@ -36,34 +36,35 @@ export default function CommentForm({ data }) {
       return;
     }
 
+    const { auth } = await import(`../../../firebase/firebase_init`);
+
+    const user = auth.currentUser;
+
+    if (!user) return;
+
     const { postComment } = await import(
       "../../../firebase/firebase_functions"
     );
-    const {
-      authenticatedID,
-      authenticatedName,
-      authenticatedPhoto,
-      postID,
-      setComments,
-    } = data;
+
+    const { postID, setComments } = data;
 
     const uploadResult = await postComment({
       content: current.value,
-      commenterID: authenticatedID,
-      commenterName: authenticatedName,
-      commenterPhoto: authenticatedPhoto,
       postID,
       setUploading,
     });
 
     if (uploadResult) {
+      const { displayName, uid, photoURL } = user;
+
       const newComment = {
-        autherID: authenticatedID,
-        autherName: authenticatedName,
-        autherPhoto: authenticatedPhoto,
+        autherID: uid,
+        autherName: displayName,
+        autherPhoto: photoURL,
         content: Buffer.from(current.value).toString("base64"),
         creationTime: `0 mins ago`,
       };
+
       setComments((prev) => [newComment, ...prev]);
     } else {
       showNotification({

@@ -1,3 +1,5 @@
+import { auth } from "./firebase_init";
+
 const providerSignIn = async (provider_name, handleSigningInState) => {
   if (!provider_name || !handleSigningInState) return false;
 
@@ -94,16 +96,31 @@ const userSignOut = async () => {
   }
 };
 
-const createPost = async ({
-  content,
-  media,
-  setUploading,
-  autherName,
-  autherID,
-  autherPhoto,
-}) => {
-  // if content, auther id or auther name isn't available
-  if (!content || !autherID || !autherName || !autherPhoto) return false;
+/**
+ * takes params as array. checks if firebase auth token and all passed data are available. returns false if not, otherwise the user object
+ * @returns {False | Object} false | User
+ */
+function is_Auth_Token_And_Passed_Data_Are_Available(params) {
+  for (let index = 0; index < params.length; index++) {
+    const param = params[index];
+
+    if (!param) return false;
+  }
+
+  const user = auth.currentUser;
+
+  if (!user) return false;
+
+  return user;
+}
+
+const createPost = async ({ content, media, setUploading }) => {
+  // if content or auth token isn't available
+  if (!is_Auth_Token_And_Passed_Data_Are_Available([content, setUploading]))
+    return false;
+
+  const { displayName, uid, photoURL } =
+    is_Auth_Token_And_Passed_Data_Are_Available([]);
 
   setUploading(true);
   try {
@@ -116,7 +133,7 @@ const createPost = async ({
         0,
         filePrevName?.lastIndexOf(".")
       );
-      const fileName = `${fileNameWithoutExt}-${new Date().getTime()}-${autherID}.${ext}`;
+      const fileName = `${fileNameWithoutExt}-${new Date().getTime()}-${uid}.${ext}`;
 
       const { uploadBytes, ref, getDownloadURL } = await import(
         `firebase/storage`
@@ -137,24 +154,56 @@ const createPost = async ({
     const encodedContent = Buffer.from(content).toString("base64");
 
     // Add a new document in collection "posts"
-    const { addDoc, collection, serverTimestamp } = await import(
+    const { doc, collection, serverTimestamp, writeBatch } = await import(
       `firebase/firestore`
     );
     const { db } = await import(`./firebase_init`);
 
+    // grab `posts` collection
     const postsRef = collection(db, "posts");
-    const dataForDB = {
+
+    // create a doc in `posts` collection
+    const postDocRef = doc(postsRef);
+
+    // create `likers` subcollection in `posts` collection
+    const likersSubColRef = collection(postDocRef, "likers");
+    // create `likersArray` doc in `likers` subcollection
+    const likersArray = doc(likersSubColRef, "likersArray");
+
+    // create `trashRequest` subcollection in `posts` collection
+    const trashRequestSubColRef = collection(postDocRef, "trashRequest");
+    // create `trashRequestArray` doc in `trashRequest` subcollection
+    const trashRequestArray = doc(trashRequestSubColRef, "trashRequestArray");
+
+    const batch = writeBatch(db);
+
+    const postData = {
       content: encodedContent,
       media: downloadURL,
-      autherName,
-      autherID,
-      autherPhoto,
+      autherName: displayName,
+      autherID: uid,
+      autherPhoto: photoURL,
       cookies: 0,
       comments: 0,
       trashRequest: 0,
       creationTime: serverTimestamp(),
     };
-    await addDoc(postsRef, dataForDB);
+
+    // setting post data
+    batch.set(postDocRef, postData);
+
+    // setting likers data
+    batch.set(likersArray, {
+      likers: [],
+    });
+
+    // setting trashRequest data
+    batch.set(trashRequestArray, {
+      trashRequest: [],
+    });
+
+    // commit batch
+    await batch.commit();
 
     return true;
   } catch (e) {
@@ -164,16 +213,13 @@ const createPost = async ({
   }
 };
 
-const postComment = async ({
-  content,
-  commenterID,
-  commenterName,
-  commenterPhoto,
-  postID,
-  setUploading,
-}) => {
-  if (!content || !commenterID || !commenterName || !commenterPhoto || !postID)
+const postComment = async ({ postID, content, setUploading }) => {
+  // if content, postID or auth token isn't available
+  if (!is_Auth_Token_And_Passed_Data_Are_Available([content, setUploading]))
     return false;
+
+  const { displayName, uid, photoURL } =
+    is_Auth_Token_And_Passed_Data_Are_Available([]);
 
   setUploading(true);
   try {
@@ -196,9 +242,9 @@ const postComment = async ({
     const commentData = {
       content: encodedContent,
       creationTime: serverTimestamp(),
-      autherID: commenterID,
-      autherName: commenterName,
-      autherPhoto: commenterPhoto,
+      autherID: uid,
+      autherName: displayName,
+      autherPhoto: photoURL,
     };
 
     // add comments and increment comments count in batch
@@ -218,72 +264,66 @@ const postComment = async ({
   }
 };
 
-const sendCookie = async ({ postID, cookieSender }) => {
-  if (!postID || !cookieSender) return false;
+const sendCookie = async ({ postID }) => {
+  // if postID or auth token isn't available
+  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID])) return false;
+
+  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
 
   try {
-    const { getDoc, writeBatch, increment, doc, query } = await import(
+    const { arrayUnion, writeBatch, doc, increment } = await import(
       `firebase/firestore`
     );
     const { db } = await import(`./firebase_init`);
 
-    // likers subcollection ref for adding doc on the next line
-    const likersDocRef = doc(db, "posts", postID, "likers", "likerArray");
+    const batch = writeBatch(db);
 
-    const likersDocSnapShot = await getDoc(likersDocRef);
+    // likers array doc ref
+    const likersDocRef = doc(db, "posts", postID, "likers", "likersArray");
 
     // post ref
     const postRef = doc(db, "posts", postID);
 
+    // update likers array and increment cookie count in batch
+    batch.update(likersDocRef, {
+      likers: arrayUnion(uid),
+    });
+    batch.update(postRef, {
+      cookies: increment(1),
+    });
+
+    // commit batch
+    await batch.commit();
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+const removeCookie = async ({ postID }) => {
+  // if postID or auth token isn't available
+  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID])) return false;
+
+  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
+
+  try {
+    const { writeBatch, doc, arrayRemove, increment } = await import(
+      `firebase/firestore`
+    );
+    const { db } = await import(`./firebase_init`);
+
     const batch = writeBatch(db);
 
-    // if likersArray doc does not exist. means the doc should be created, data should be inputed and increment cookie count
-    if (!likersDocSnapShot.exists()) {
-      // adding cookieSender id in likers array and increasing liker count in batch
-      batch.set(likersDocRef, { likers: [cookieSender] });
-      batch.update(postRef, {
-        cookies: increment(1),
-      });
+    // likers subcollection ref for adding doc on the next line
+    const likersDocRef = doc(db, "posts", postID, "likers", "likersArray");
 
-      // commit batch
-      await batch.commit();
-
-      return 1;
-    }
-
-    const { where, collection, getDocs } = await import(`firebase/firestore`);
-
-    const likersArrayQueryRef = query(
-      collection(db, "posts", postID, "likers"),
-      where("likers", "array-contains", cookieSender)
-    );
-
-    const likerArrayDocQuerySnapShot = await getDocs(likersArrayQueryRef);
-
-    // if cookie sender does not exist in likersArray. means cookie sender should be added in the array and increment cookie count
-    if (likerArrayDocQuerySnapShot.empty) {
-      const { arrayUnion } = await import(`firebase/firestore`);
-
-      // update likers array and increment cookie count in batch
-      batch.update(likersDocRef, {
-        likers: arrayUnion(cookieSender),
-      });
-      batch.update(postRef, {
-        cookies: increment(1),
-      });
-
-      // commit batch
-      await batch.commit();
-
-      return 1;
-    }
-
-    // if cookie sender does exist in likersArray. means cookie sender should be removed from the array and decrement cookie count
-    const { arrayRemove } = await import(`firebase/firestore`);
+    // post ref
+    const postRef = doc(db, "posts", postID);
 
     // remove cookie sender from likers array and decrement cookie count in batch
     batch.update(likersDocRef, {
-      likers: arrayRemove(cookieSender),
+      likers: arrayRemove(uid),
     });
     batch.update(postRef, {
       cookies: increment(-1),
@@ -292,10 +332,207 @@ const sendCookie = async ({ postID, cookieSender }) => {
     // commit batch
     await batch.commit();
 
-    return -1;
+    return true;
   } catch (error) {
     return false;
   }
 };
 
-export { userSignOut, providerSignIn, createPost, postComment, sendCookie };
+const sendTrashRequest = async ({ postID }) => {
+  // if postID or auth token isn't available
+  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID])) return false;
+
+  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
+
+  try {
+    const { arrayUnion, writeBatch, doc, increment } = await import(
+      `firebase/firestore`
+    );
+    const { db } = await import(`./firebase_init`);
+
+    const batch = writeBatch(db);
+
+    // trashers array doc ref
+    const trashersDocRef = doc(
+      db,
+      "posts",
+      postID,
+      "trashers",
+      "trashersArray"
+    );
+
+    // post ref
+    const postRef = doc(db, "posts", postID);
+
+    // update trashers array and increment cookie count in batch
+    batch.update(trashersDocRef, {
+      trashers: arrayUnion(uid),
+    });
+    batch.update(postRef, {
+      trashRequest: increment(1),
+    });
+
+    // commit batch
+    await batch.commit();
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+const removeTrashRequest = async ({ postID }) => {
+  // if postID or auth token isn't available
+  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID])) return false;
+
+  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
+
+  try {
+    const { writeBatch, doc, arrayRemove, increment } = await import(
+      `firebase/firestore`
+    );
+    const { db } = await import(`./firebase_init`);
+
+    const batch = writeBatch(db);
+
+    // trashers subcollection ref for adding doc on the next line
+    const trashersDocRef = doc(
+      db,
+      "posts",
+      postID,
+      "trashers",
+      "trashersArray"
+    );
+
+    // post ref
+    const postRef = doc(db, "posts", postID);
+
+    // remove cookie sender from trashers array and decrement cookie count in batch
+    batch.update(trashersDocRef, {
+      trashers: arrayRemove(uid),
+    });
+    batch.update(postRef, {
+      trashRequest: increment(-1),
+    });
+
+    // commit batch
+    await batch.commit();
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
+ * @param {Object} param - post id and variant Object
+ * @param {String} param.postID
+ * @param {`likers` | `trashRequest`} param.variant
+ * @returns {Promise<Boolean>} True if interaction is added succesfully. False on error
+ */
+const sendInteraction = async ({ postID, variant }) => {
+  // if postID or auth token isn't available
+  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID, variant]))
+    return false;
+
+  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
+
+  try {
+    const { arrayUnion, writeBatch, doc, increment } = await import(
+      `firebase/firestore`
+    );
+    const { db } = await import(`./firebase_init`);
+
+    const batch = writeBatch(db);
+
+    // interactions array doc ref
+    const interactionsDocRef = doc(
+      db,
+      "posts",
+      postID,
+      variant,
+      `${variant}Array`
+    );
+
+    // post ref
+    const postRef = doc(db, "posts", postID);
+
+    // update interactions array and increment interaction count in batch
+    batch.update(interactionsDocRef, {
+      [variant]: arrayUnion(uid),
+    });
+    batch.update(postRef, {
+      [variant === `likers` ? `cookies` : `trashRequest`]: increment(1),
+    });
+
+    // commit batch
+    await batch.commit();
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
+ * @param {Object} param - post id and variant Object
+ * @param {String} param.postID
+ * @param {`likers` | `trashRequest`} param.variant
+ * @returns {Promise<Boolean>} True if interaction is removed succesfully. False on error
+ */
+const removeInteraction = async ({ postID, variant }) => {
+  // if postID or auth token isn't available
+  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID, variant]))
+    return false;
+
+  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
+
+  try {
+    const { arrayRemove, writeBatch, doc, increment } = await import(
+      `firebase/firestore`
+    );
+    const { db } = await import(`./firebase_init`);
+
+    const batch = writeBatch(db);
+
+    // interactions array doc ref
+    const interactionsDocRef = doc(
+      db,
+      "posts",
+      postID,
+      variant,
+      `${variant}Array`
+    );
+
+    // post ref
+    const postRef = doc(db, "posts", postID);
+
+    // update interactions array and increment interaction count in batch
+    batch.update(interactionsDocRef, {
+      [variant]: arrayRemove(uid),
+    });
+    batch.update(postRef, {
+      [variant === `likers` ? `cookies` : `trashRequest`]: increment(-1),
+    });
+
+    // commit batch
+    await batch.commit();
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export {
+  userSignOut,
+  providerSignIn,
+  createPost,
+  postComment,
+  sendCookie,
+  removeCookie,
+  sendTrashRequest,
+  removeTrashRequest,
+  sendInteraction,
+  removeInteraction,
+};

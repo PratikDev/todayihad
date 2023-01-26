@@ -28,10 +28,6 @@
   background: linear-gradient(to bottom, transparent, #27363e);
 }
 
-.react_btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
 .post_creation_date {
   font-size: 11px;
 }
@@ -48,10 +44,6 @@
 
 .post_settings:focus-within .report_btn {
   display: block !important;
-}
-
-.interectionCount {
-  font-size: 11px;
 }
 
 @media screen and (max-width: 480px) {
@@ -80,15 +72,6 @@
     --font-size: 11px;
   }
 
-  .react_btn {
-    font-size: 14px;
-  }
-
-  .react_btn > svg {
-    width: 20px;
-    height: 20px;
-  }
-
   .postInterBtn {
     font-size: 9px;
   }
@@ -99,14 +82,6 @@
 }
 
 @media screen and (max-width: 410px) {
-  .react_btn {
-    padding: 0.25rem !important;
-  }
-
-  .interectionCount {
-    font-size: 9px;
-  }
-
   .post_settings > svg {
     width: 5px;
     height: 20px;
