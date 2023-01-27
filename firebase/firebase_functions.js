@@ -66,6 +66,10 @@ const providerSignIn = async (provider_name, handleSigningInState) => {
         photoURL,
         email: email || provider_email,
         uid,
+        hideMe: false,
+        hideUsername: false,
+        hideEmail: false,
+        feedSetting: `recent`,
       });
     }
 
@@ -264,166 +268,6 @@ const postComment = async ({ postID, content, setUploading }) => {
   }
 };
 
-const sendCookie = async ({ postID }) => {
-  // if postID or auth token isn't available
-  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID])) return false;
-
-  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
-
-  try {
-    const { arrayUnion, writeBatch, doc, increment } = await import(
-      `firebase/firestore`
-    );
-    const { db } = await import(`./firebase_init`);
-
-    const batch = writeBatch(db);
-
-    // likers array doc ref
-    const likersDocRef = doc(db, "posts", postID, "likers", "likersArray");
-
-    // post ref
-    const postRef = doc(db, "posts", postID);
-
-    // update likers array and increment cookie count in batch
-    batch.update(likersDocRef, {
-      likers: arrayUnion(uid),
-    });
-    batch.update(postRef, {
-      cookies: increment(1),
-    });
-
-    // commit batch
-    await batch.commit();
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-const removeCookie = async ({ postID }) => {
-  // if postID or auth token isn't available
-  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID])) return false;
-
-  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
-
-  try {
-    const { writeBatch, doc, arrayRemove, increment } = await import(
-      `firebase/firestore`
-    );
-    const { db } = await import(`./firebase_init`);
-
-    const batch = writeBatch(db);
-
-    // likers subcollection ref for adding doc on the next line
-    const likersDocRef = doc(db, "posts", postID, "likers", "likersArray");
-
-    // post ref
-    const postRef = doc(db, "posts", postID);
-
-    // remove cookie sender from likers array and decrement cookie count in batch
-    batch.update(likersDocRef, {
-      likers: arrayRemove(uid),
-    });
-    batch.update(postRef, {
-      cookies: increment(-1),
-    });
-
-    // commit batch
-    await batch.commit();
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-const sendTrashRequest = async ({ postID }) => {
-  // if postID or auth token isn't available
-  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID])) return false;
-
-  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
-
-  try {
-    const { arrayUnion, writeBatch, doc, increment } = await import(
-      `firebase/firestore`
-    );
-    const { db } = await import(`./firebase_init`);
-
-    const batch = writeBatch(db);
-
-    // trashers array doc ref
-    const trashersDocRef = doc(
-      db,
-      "posts",
-      postID,
-      "trashers",
-      "trashersArray"
-    );
-
-    // post ref
-    const postRef = doc(db, "posts", postID);
-
-    // update trashers array and increment cookie count in batch
-    batch.update(trashersDocRef, {
-      trashers: arrayUnion(uid),
-    });
-    batch.update(postRef, {
-      trashRequest: increment(1),
-    });
-
-    // commit batch
-    await batch.commit();
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-const removeTrashRequest = async ({ postID }) => {
-  // if postID or auth token isn't available
-  if (!is_Auth_Token_And_Passed_Data_Are_Available([postID])) return false;
-
-  const { uid } = is_Auth_Token_And_Passed_Data_Are_Available([]);
-
-  try {
-    const { writeBatch, doc, arrayRemove, increment } = await import(
-      `firebase/firestore`
-    );
-    const { db } = await import(`./firebase_init`);
-
-    const batch = writeBatch(db);
-
-    // trashers subcollection ref for adding doc on the next line
-    const trashersDocRef = doc(
-      db,
-      "posts",
-      postID,
-      "trashers",
-      "trashersArray"
-    );
-
-    // post ref
-    const postRef = doc(db, "posts", postID);
-
-    // remove cookie sender from trashers array and decrement cookie count in batch
-    batch.update(trashersDocRef, {
-      trashers: arrayRemove(uid),
-    });
-    batch.update(postRef, {
-      trashRequest: increment(-1),
-    });
-
-    // commit batch
-    await batch.commit();
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
 /**
  * @param {Object} param - post id and variant Object
  * @param {String} param.postID
@@ -529,10 +373,6 @@ export {
   providerSignIn,
   createPost,
   postComment,
-  sendCookie,
-  removeCookie,
-  sendTrashRequest,
-  removeTrashRequest,
   sendInteraction,
   removeInteraction,
 };

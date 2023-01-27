@@ -92,7 +92,11 @@ export default function InteractionBtn({
   const formatter = Intl.NumberFormat(`en`, { notation: `compact` });
 
   return (
-    <div className="w-25" onClick={handleBtnClick}>
+    <div
+      className="w-25"
+      onClick={handleBtnClick}
+      title={variant === "likers" ? `Send Cookies` : `Trash/Delete Requst`}
+    >
       <button
         className={`btn rounded-1 text-light text-opacity-50 w-100 ${
           hasInteractedWithThisPost ? `bg-secondary bg-opacity-50` : ``

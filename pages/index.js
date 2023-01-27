@@ -76,6 +76,15 @@ export async function getServerSideProps() {
       // getting post id
       const postID = post.id;
 
+      // converting creation time to milliseconds
+      const prevTime = postData.creationTime.toMillis();
+
+      // converting millis to human readable format
+      const newTime = timeFormatter(prevTime);
+
+      // updating serverTimestamp object to date
+      postData.creationTime = newTime;
+
       // getting likers array
       const likersArrayDocRef = doc(
         db,
@@ -85,7 +94,7 @@ export async function getServerSideProps() {
         "likersArray"
       );
       const likersArrayDocSnapShot = await getDoc(likersArrayDocRef);
-      let likersArray = likersArrayDocSnapShot.data().likers;
+      const likersArray = likersArrayDocSnapShot.data().likers;
 
       // getting trashRequest array
       const trashRequestArrayDocRef = doc(
@@ -98,16 +107,8 @@ export async function getServerSideProps() {
       const trashRequestArrayDocSnapShot = await getDoc(
         trashRequestArrayDocRef
       );
-      let trashRequestArray = trashRequestArrayDocSnapShot.data().trashRequest;
-
-      // converting creation time to milliseconds
-      const prevTime = postData.creationTime.toMillis();
-
-      // converting millis to human readable format
-      const newTime = timeFormatter(prevTime);
-
-      // updating serverTimestamp object to date
-      postData.creationTime = newTime;
+      const trashRequestArray =
+        trashRequestArrayDocSnapShot.data().trashRequest;
 
       data.posts.push({ ...postData, postID, likersArray, trashRequestArray });
     }

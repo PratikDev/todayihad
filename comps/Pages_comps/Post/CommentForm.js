@@ -10,7 +10,7 @@ import { NotificationContext } from "../../../contexts/NotificationContext";
 // styles imports
 import footerBtnStyles from "../../../styles/comps/utils/utils_comp/FooterBtn.module.css";
 
-export default function CommentForm({ data }) {
+export default function CommentForm({ data, loading }) {
   // comment uploading state
   const [uploading, setUploading] = useState(false);
 
@@ -82,7 +82,7 @@ export default function CommentForm({ data }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (!uploading) handleSubmit(e);
+          if (!uploading && !loading) handleSubmit(e);
         }}
       >
         <textarea
@@ -93,21 +93,29 @@ export default function CommentForm({ data }) {
           className={`${footerBtnStyles.textarea} bg-transparent rounded-1 w-100 flex-grow-1 p-3`}
         ></textarea>
         <div className={`customModal-footer mt-2 mb-4 text-end`}>
-          <button
-            type="submit"
-            disabled={uploading}
-            className={`btn btn-light ${footerBtnStyles.modalBtn}`}
-          >
-            {uploading ? (
-              <Spinner
-                size={`sm`}
-                hiddenText={`posting comment`}
-                customClasses={`mx-3`}
-              />
-            ) : (
-              `Comment`
-            )}
-          </button>
+          {loading ? (
+            <>
+              <div className="placeholder-glow">
+                <div className="px-5 py-3 rounded-2 placeholder bg-light"></div>
+              </div>
+            </>
+          ) : (
+            <button
+              type="submit"
+              disabled={uploading || loading}
+              className={`btn btn-light ${footerBtnStyles.modalBtn}`}
+            >
+              {uploading ? (
+                <Spinner
+                  size={`sm`}
+                  hiddenText={`posting comment`}
+                  customClasses={`mx-3`}
+                />
+              ) : (
+                `Comment`
+              )}
+            </button>
+          )}
         </div>
       </form>
     </>

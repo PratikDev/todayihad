@@ -68,7 +68,7 @@ export default function User({ loading, data }) {
                 alt={`No hard feelings, but we think ${autherName} is a boring person`}
               />
               <small className="m-0 mt-2 text-center text-muted">
-                No hard feelings,
+                The world is not over yet,
                 <br />
                 but we think {autherName} is a boring person
               </small>
@@ -160,7 +160,7 @@ export async function getServerSideProps(context) {
       const postsList = await getDocs(postsQuObj);
 
       const { timeFormatter } = await import(`../../helpers/timeFormatter`);
-      postsList.forEach((post) => {
+      for (const post of postsList.docs) {
         // getting the data;
         const postData = post.data();
 
@@ -176,9 +176,38 @@ export async function getServerSideProps(context) {
         // updating serverTimestamp object to date
         postData.creationTime = newTime;
 
-        // pushing data back to posts array
-        data.posts.push({ ...postData, postID });
-      });
+        // getting likers array
+        const likersArrayDocRef = doc(
+          db,
+          "posts",
+          postID,
+          "likers",
+          "likersArray"
+        );
+        const likersArrayDocSnapShot = await getDoc(likersArrayDocRef);
+        const likersArray = likersArrayDocSnapShot.data().likers;
+
+        // getting trashRequest array
+        const trashRequestArrayDocRef = doc(
+          db,
+          "posts",
+          postID,
+          "trashRequest",
+          "trashRequestArray"
+        );
+        const trashRequestArrayDocSnapShot = await getDoc(
+          trashRequestArrayDocRef
+        );
+        const trashRequestArray =
+          trashRequestArrayDocSnapShot.data().trashRequest;
+
+        data.posts.push({
+          ...postData,
+          postID,
+          likersArray,
+          trashRequestArray,
+        });
+      }
     }
   } catch (error) {
     data.errorCode = error;

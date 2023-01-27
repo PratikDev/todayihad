@@ -46,6 +46,7 @@ export default function InteractionsGroup({
         href={!separate ? `/post/${postID}#commentsection` : null}
         className={`w-25`}
         onClick={!separate ? handleCommentClick : null}
+        title={!separate ? `Visit comments` : ``}
       >
         <button
           className={`btn rounded-1 text-light text-opacity-50 w-100 ${styles.react_btn}`}

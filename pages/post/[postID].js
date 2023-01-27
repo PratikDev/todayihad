@@ -5,11 +5,12 @@ import { useState } from "react";
 import Post from "../../comps/Pages_comps/Post";
 import Comment from "../../comps/Pages_comps/Post/Comment";
 import CommentForm from "../../comps/Pages_comps/Post/CommentForm";
+import PostSkeleton from "../../comps/utils/Post_Skeleton";
 
 // styles imports
 import styles from "../../styles/pages/Comments.module.css";
 
-export default function post_page({ data }) {
+export default function post_page({ loading, data }) {
   const { errorCode, post, commentsList, postID } = JSON.parse(data);
 
   // if there is error
@@ -29,7 +30,7 @@ export default function post_page({ data }) {
 
   return (
     <div className={`mx-auto py-3 ${styles.wrapper}`}>
-      <Post count={1} separate data={post} />
+      {loading ? <PostSkeleton /> : <Post count={1} separate data={post} />}
 
       <div
         className={`bg-secondary bg-opacity-25 px-4 py-2 rounded-bottom ${styles.commentsArea}`}
@@ -40,6 +41,7 @@ export default function post_page({ data }) {
             postID,
             setComments,
           }}
+          loading={loading}
         />
 
         {comments.length ? (
@@ -115,6 +117,31 @@ export async function getServerSideProps(context) {
         });
       }
 
+      // getting likers array
+      const likersArrayDocRef = doc(
+        db,
+        "posts",
+        postID,
+        "likers",
+        "likersArray"
+      );
+      const likersArrayDocSnapShot = await getDoc(likersArrayDocRef);
+      const likersArray = likersArrayDocSnapShot.data().likers;
+
+      // getting trashRequest array
+      const trashRequestArrayDocRef = doc(
+        db,
+        "posts",
+        postID,
+        "trashRequest",
+        "trashRequestArray"
+      );
+      const trashRequestArrayDocSnapShot = await getDoc(
+        trashRequestArrayDocRef
+      );
+      const trashRequestArray =
+        trashRequestArrayDocSnapShot.data().trashRequest;
+
       // getting the data;
       const postData = post.data();
 
@@ -128,7 +155,7 @@ export async function getServerSideProps(context) {
       postData.creationTime = newTime;
 
       // setting post data in data object
-      data.post = { ...postData };
+      data.post = { ...postData, postID, likersArray, trashRequestArray };
     }
   } catch (error) {
     data.errorCode = error;

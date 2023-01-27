@@ -36,17 +36,9 @@ export default function AuthChecker({ children: Children, childProps }) {
     return;
   }
 
-  const { uid, displayName, photoURL } = authContext || {};
-
   return (
     <>
-      <Children
-        loading={loading}
-        authenticatedID={uid}
-        authenticatedName={displayName}
-        authenticatedPhoto={photoURL}
-        {...childProps}
-      />
+      <Children loading={loading} {...childProps} />
       {signedIn && <Routing />}
     </>
   );
